@@ -12,7 +12,8 @@ require.config({
 		gamemodel: 'model/game_model',
 		gameview: 'view/game_view',
 		game: 'game',
-		config: 'config'
+		config: 'config',
+		linemodel: 'model/line_model'
 	},
 	shim: {
 		//underscore: { exports: '_' },

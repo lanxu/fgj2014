@@ -34,11 +34,11 @@ window.addEventListener('keyup', onKeyUp, true);
 		console.log('Render');
 		game_view.render();
 
-		var sound = new Howl({
-		  urls: ['web/sounds/Electro_House_Loop.ogg'],
-		  loop: true,
-		  volume: 0.5,
-		  }).play();
+		//var sound = new Howl({
+		//  urls: ['web/sounds/Electro_House_Loop.ogg'],
+		//  loop: true,
+		//  volume: 0.5,
+		//  }).play();
 	
 		var play_sound = true;
 		var x = 0;
@@ -58,16 +58,19 @@ window.addEventListener('keyup', onKeyUp, true);
 
 			var numUpdates = Math.floor((frame.timeDiff + leftover) / FPS);
 			for(var i = 0; i < numUpdates; i++) {
-
+			
+				game_model.myLineModel.addPoint(Math.cos(x*(180/Math.PI)),Math.sin(x*(180/Math.PI)));
+				
+				game_model.myLine.attrs.points = game_model.myLineModel.getPoints();
+				
+				game_model.myLineModel.movePoints();
+				
 				// Logic
 				// Modify model -> see difference
 				if(game_model.myRect != null) {
 					game_model.myRect.setX(x);
 					game_model.myRect.setY(10+Math.random()*5);
 				x+=2;
-				if(x > 800) {
-					x = -100;
-				}
 				
 				
 				}
