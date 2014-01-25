@@ -9,6 +9,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 			myHBFill : null,
 			myHBText : null,
 	    myHzLine: null,
+			myLivesText: null,
 	    currentLine: 0,
 	    // Galaxy SII resolution
 	    width: 800,
@@ -181,7 +182,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 							});
 							
 							var hbFill = new Kinetic.Rect({
-								width: 130,
+								width: 144,
 								height: 9,
 								x: 8,
 								y: 63,
@@ -200,7 +201,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 						    align: 'left',
 						    fill: 'white'
 					    });
-							
+							this.myLivesText = this.livesText;
 							this.myHB = hb;
 							this.myHBFill = hbFill;
 							this.myHBText = moodText;

@@ -50,18 +50,20 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var playerspeedy = 0;
 			var movespeedx = 0;
 			var movespeedy = 0;
-
+			var health = 0;
 			var numObstacles = 4;
 			var obstacle = [];
 			var curObstacleLine = [];
+			var collisionTimer = 90;
+			var collisionState = false;
 			
 			var targetx = 0;
 			var targety = 0;
 			var bgMusicState = false;
 			var bgMusic = null;
-			
+			var lives = 1;
 			var bgScale = 1;
-			
+			var endGameState = false;
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
 			});
@@ -76,6 +78,10 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 				var numUpdates = Math.floor((frame.timeDiff + leftover) / FPS);
 				for(var i = 0; i < numUpdates; i++) {
+					
+					// Update health
+					game_model.myHBFill.width(health*144);
+					
 					x = x + 1;
 					if(x % 1 == 0)	 {
 						bgScale+=0.01;
@@ -104,10 +110,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 					// Logic
 					// Modify model -> see difference
 					x+=2;
-					selectPoint-=1;
-					if(selectPoint < 0) {
-						selectPoint = 199;
-					}
+					
 
 					// Stars
 					for(var i = 0; i < 100; i++) {
@@ -129,7 +132,11 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 						if(game_model.myImg != null) {
 							//var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
-							selectPoint = 120;
+							if(endGameState === false) {
+								selectPoint = 120;
+							} else {
+								selectPoint += 1;
+							}
 							var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(selectPoint);
 							if(imgPoint !== null) {
 								if(bgMusicState === false) {
@@ -293,13 +300,36 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							if(obstacle[j].getCurrentPoint() < 40) {
 								var obsLine = Math.floor((Math.random()*4));
 								curObstacleLine[j] = obsLine;
-								obstacle[j] = new ObstacleModel(game_model.sprites[j+5], game_model.myLineModel[obsLine], -(Math.random()*2+0.5),195);
+								obstacle[j] = new ObstacleModel(game_model.sprites[j+5], game_model.myLineModel[obsLine], -(Math.random()*2+0.5),199);
 							}
 
 							oPos = obstacle[j].getCurrentPoint();
 
-							if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine) {
-								console.log("Collision in line "+curObstacleLine.toString());
+							if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine && collisionState === false) {
+								console.log("Collision in line "+curObstacleLine[j].toString());
+								if(collisionState === false) {
+									collisionState = true;
+									health = health-0.1;
+									if(health < 0) {
+										health = 0.5;
+										lives -= 1;
+										game_model.myLivesText.text(''+lives);
+										if(lives <= 0) {
+											health = 0;
+											game_model.myLivesText.text('Game Over');
+											endGameState = true;
+										}
+									}
+								}
+							}
+							
+							if(collisionState === true) {
+								collisionTimer -= 1;
+								if(collisionTimer <= 0) {
+									collisionState = false;
+									collisionTimer = 90;
+								}
+								console.log(collisionState);
 							}
 						}
 					}

@@ -21,7 +21,7 @@ define(['config','backbone','kinetic'], function (Config, Backbone, Kinetic) {
 		
 			var imgPoint = lineModel.getPoint(curLinePoint);
 			if(imgPoint !== null) {
-				var scaling_factor = (((200-curLinePoint)*0.005)+0.1);	
+				var scaling_factor = (((200-curLinePoint)*0.003)+0.1);	
 				kinImg.setX(imgPoint[0]-scaling_factor*40);
 				kinImg.setY(imgPoint[1]-scaling_factor*100);
 				kinImg.scaleX(scaling_factor);
