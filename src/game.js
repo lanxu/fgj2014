@@ -57,6 +57,8 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			
 			var targetx = 0;
 			var targety = 0;
+			var bgMusicState = false;
+			var bgMusic = null;
 
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
@@ -118,7 +120,14 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							selectPoint = 120;
 							var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(selectPoint);
 							if(imgPoint !== null) {
-
+								if(bgMusicState === false) {
+									bgMusic = new Howl({
+										urls: ['web/sounds/fgj2014_running.ogg'],
+										loop: true,
+										volume: 0.5,
+									}).play();
+									bgMusicState = true;
+								}
 								var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
 								var rotation_angle = -game_model.myLineModel[game_model.currentLine].getPointDiffAngle(selectPoint)*(180/Math.PI)*0.5;
 								if(game_model.currentLine > 1) {
