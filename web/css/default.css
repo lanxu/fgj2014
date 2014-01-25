@@ -56,7 +56,7 @@ body {
 
 .kineticjs-content { 
 	display: block !important; 
-	background: white;
+	background: #111;
 }
 /*canvas {
 	background: white;

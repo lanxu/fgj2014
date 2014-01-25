@@ -86,12 +86,16 @@ window.addEventListener('keyup', onKeyUp, true);
 				}
 							
 				if(game_model.myImg != null) {
-					var imgPoint = game_model.myLineModel[0].getPoint(selectPoint);
+					//var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
+					selectPoint = 100;
+					var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
 					if(imgPoint !== null) {
-						game_model.myImg.setX(imgPoint[0]);
-						game_model.myImg.setY(imgPoint[1]-20);
-						game_model.myImg.scaleX((((200-selectPoint)*0.005)+0.1));
-						game_model.myImg.scaleY((((200-selectPoint)*0.005)+0.1));
+						var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
+						game_model.myImg.setX(imgPoint[0]-scaling_factor*40);
+						game_model.myImg.setY(imgPoint[1]-scaling_factor*100);
+						game_model.myImg.scaleX(scaling_factor);
+						game_model.myImg.scaleY(scaling_factor);
+
 					}
 					//console.log(keyStates);
 				}

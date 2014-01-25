@@ -35,15 +35,10 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 			// Add Layers to stage
 			this.stage.add(this.layer);
 			this.stage.add(this.debuglayer);
-			$(this.stage.getContent()).on('click', function() {
+/*			$(this.stage.getContent()).on('click', function() {
 				var myNode = document.querySelector("#container");
-				//myNode.mozRequestFullScreen();
-				//myNode.webkitRequestFullScreen();
 				
 				requestFullScreen(myNode);
-				/*$("#borders").css('width', (window.innerWidth > 0) ? window.innerWidth : screen.width);
-				$("#borders").css('height', (window.innerHeight > 0) ? window.innerHeight : screen.height);
-			*/
 				
 				$('#container').css('position','absolute');
 				$('#container').css('left','0');
@@ -54,17 +49,17 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 				$("canvas").css('width', (window.innerWidth > 0) ? window.innerWidth : screen.width);
 				$("canvas").css('height', (window.innerHeight > 0) ? window.innerHeight : screen.height);
 			});
-
+*/
 			// Create minimum stuff
 			var fpsText = new Kinetic.Text({
 				x: 10,
 				y: 10,
 				text: 'FPS: ',
-				fontSize: 30,
+				fontSize: 10,
 				fontFamily: 'Fullkorn',
 				fontStyle: 'bold',
 				align: 'left',
-				fill: 'black'
+				fill: 'white'
 			});
 			this.debuglayer.add(fpsText);
 
@@ -81,7 +76,7 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					//console.log('Log: '+this); 
 					console.log('Log:');
 					console.log(this);
-					this.layer.add(this.model.myRect);
+					
 					this.layer.add(this.model.myLine[0]);
 					this.layer.add(this.model.myLine[1]);
 					this.layer.add(this.model.myLine[2]);
