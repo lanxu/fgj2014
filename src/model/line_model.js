@@ -2,7 +2,8 @@ define(['config','backbone','kinetic'], function (Config, Backbone, Kinetic) {
 	var LineModel = function(width, height) {
 		var that = {};
 		var points = [];
-		var maxPoints = 100;
+		var pointAngles = [];
+		var maxPoints = 200;
 		var center = [width/2, height/2];
 		
 		that.getPoints =  function() {return points}
@@ -11,16 +12,27 @@ define(['config','backbone','kinetic'], function (Config, Backbone, Kinetic) {
 		that.maxPoints = maxPoints;
 		var addPoint = function(x,y) {
 			if(points.length/2 > maxPoints) {	
-				points.splice(0,2);	
-			} 
-			points.splice(-1, 0, y+center[1], x+center[0]);
+				points.shift();
+				points.shift();
+				pointAngles.shift();
+			}
+			points.push(x+center[0]);
+			points.push(y+center[1]);
+			pointAngles.push(Math.atan2(x, y));
 		}
 		that.addPoint = addPoint;
-		console.log(this);
+		var getPoint = function(pointNum) {
+			if(pointNum < points.length/2) {
+				return [points[pointNum*2], points[pointNum*2+1]];
+			} else {
+				return null;
+			}
+		}
+		that.getPoint = getPoint;
 		var movePoints = function() {
 			for(var i = 0;i < points.length/2;i++) {
-				points[i] += 1;
-				points[i+1] += 1;
+				points[i*2] += Math.sin(pointAngles[i])*3;
+				points[i*2+1] += Math.cos(pointAngles[i])*3;
 			}
 		}
 		that.movePoints = movePoints;

@@ -43,6 +43,7 @@ window.addEventListener('keyup', onKeyUp, true);
 		var play_sound = true;
 		var x = 0;
 		var leftover = 0;
+		var selectPoint = 199;
 
 		game_view.layer.on('mousemove', function() {
 			console.log('move');
@@ -58,26 +59,40 @@ window.addEventListener('keyup', onKeyUp, true);
 
 			var numUpdates = Math.floor((frame.timeDiff + leftover) / FPS);
 			for(var i = 0; i < numUpdates; i++) {
-			
-				game_model.myLineModel.addPoint(Math.cos(x*(180/Math.PI)),Math.sin(x*(180/Math.PI)));
-				
-				game_model.myLine.attrs.points = game_model.myLineModel.getPoints();
-				
-				game_model.myLineModel.movePoints();
-				
+				hzPoints = [];
+				for(var j = 0; j < game_model.myLineModel.length; j++) {
+					game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin(x*(Math.PI/180))+2.5);
+					
+					game_model.myLine[j].attrs.points = game_model.myLineModel[j].getPoints();
+					
+					game_model.myLineModel[j].movePoints();
+					curPoint = game_model.myLineModel[j].getPoint(selectPoint);
+					if(curPoint !== null) {
+						hzPoints.push(curPoint[0]);
+						hzPoints.push(curPoint[1]);
+					}
+				}
+				game_model.myHzLine.attrs.points = hzPoints;
 				// Logic
 				// Modify model -> see difference
 				if(game_model.myRect != null) {
 					game_model.myRect.setX(x);
 					game_model.myRect.setY(10+Math.random()*5);
-				x+=2;
-				
-				
+					x+=2;
+					selectPoint-=1;
+					if(selectPoint < 0) {
+						selectPoint = 199;
+					}
 				}
 							
 				if(game_model.myImg != null) {
-					game_model.myImg.setX(352+Math.random()*5);
-					game_model.myImg.setY(152+Math.random()*5);
+					var imgPoint = game_model.myLineModel[0].getPoint(selectPoint);
+					if(imgPoint !== null) {
+						game_model.myImg.setX(imgPoint[0]);
+						game_model.myImg.setY(imgPoint[1]-20);
+						game_model.myImg.scaleX((((200-selectPoint)*0.005)+0.1));
+						game_model.myImg.scaleY((((200-selectPoint)*0.005)+0.1));
+					}
 					//console.log(keyStates);
 				}
 					// If Samsung android browser is detected

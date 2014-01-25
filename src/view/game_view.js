@@ -82,9 +82,12 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					console.log('Log:');
 					console.log(this);
 					this.layer.add(this.model.myRect);
+					this.layer.add(this.model.myLine[0]);
+					this.layer.add(this.model.myLine[1]);
+					this.layer.add(this.model.myLine[2]);
+					this.layer.add(this.model.myLine[3]);
+					this.layer.add(this.model.myHzLine);
 					this.layer.add(this.model.myImg);
-					this.layer.add(this.model.myLine);
-					
 					this.stage.add(this.layer);
 
 

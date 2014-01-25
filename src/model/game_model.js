@@ -3,8 +3,9 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 		name: 'The best game ever',
 	    myRect: null,
 	    myImg: null,
-			myLineModel: null,
-			myLine: null,
+			myLineModel: [],
+			myLine: [],
+			myHzLine: null,
 			
 	    // Galaxy SII resolution
 	    width: 800,
@@ -46,10 +47,51 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 						lineJoin: 'round'
 					});
 					
-					var lineModel = new LineModel(this.width,this.height);
+					var greenLine = new Kinetic.Line({
+						points: [],
+						stroke: 'green',
+						strokeWidth: 1,
+						lineCap: 'round',
+						lineJoin: 'round'
+					});
+					
+					var blackLine = new Kinetic.Line({
+						points: [],
+						stroke: 'black',
+						strokeWidth: 1,
+						lineCap: 'round',
+						lineJoin: 'round'
+					});
+					
+					var blueLine = new Kinetic.Line({
+						points: [],
+						stroke: 'blue',
+						strokeWidth: 1,
+						lineCap: 'round',
+						lineJoin: 'round'
+					});
+					
+					var hzLine = new Kinetic.Line({
+						points: [],
+						stroke: 'black',
+						strokeWidth: 2,
+						lineCap: 'round',
+						lineJoin: 'round'
+					});
+					
+					var lineModel = [];
+					lineModel[0] = new LineModel(this.width,this.height);
+					lineModel[1] = new LineModel(this.width,this.height);
+					lineModel[2] = new LineModel(this.width,this.height);
+					lineModel[3] = new LineModel(this.width,this.height);
+					
 					
 			    this.myRect = rect;
-					this.myLine = redLine;
+					this.myLine[0] = redLine;
+					this.myLine[1] = greenLine;
+					this.myLine[2] = blackLine;
+					this.myLine[3] = blueLine;
+					this.myHzLine = hzLine;
 					this.myLineModel = lineModel;
 			    callback();
 		    }).bind(this);
