@@ -87,15 +87,17 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 			    }
 		    }.bind(this);
 		    var sources = new Array(
-				    './web/images/surfer.png',
+				    './web/images/surfer.png',  // 0
 				    './web/images/life.png',
 				    './web/images/title.png',
 				    './web/images/title_extreme.png',
 				    './web/images/space.jpg',
-				    './web/images/surfer.png',
-				    './web/images/title.png',
-				    './web/images/surfer.png',
-				    './web/images/title.png'
+				    './web/images/obstacle1.png', // 5
+				    './web/images/obstacle1.png',
+				    './web/images/obstacle1.png',
+				    './web/images/obstacle1.png',
+				    './web/images/planet1.png' // 9
+
 				    );
 		    loadImages(sources,
 				    (function() {
@@ -114,7 +116,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 
 					    var redLine = new Kinetic.Line({
 						    points: [],
-						stroke: 'red',
+						stroke: 'white',
 						strokeWidth: 3,
 						lineCap: 'round',
 						lineJoin: 'round'
@@ -122,7 +124,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 
 					    var greenLine = new Kinetic.Line({
 						    points: [],
-						stroke: 'green',
+						stroke: 'white',
 						strokeWidth: 3,
 						lineCap: 'round',
 						lineJoin: 'round'
@@ -138,7 +140,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 
 					    var blueLine = new Kinetic.Line({
 						    points: [],
-						stroke: 'blue',
+						stroke: 'white',
 						strokeWidth: 3,
 						lineCap: 'round',
 						lineJoin: 'round'
