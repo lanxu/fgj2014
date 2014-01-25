@@ -59,7 +59,9 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var targety = 0;
 			var bgMusicState = false;
 			var bgMusic = null;
-
+			
+			var bgScale = 1;
+			
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
 			});
@@ -74,6 +76,16 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 				var numUpdates = Math.floor((frame.timeDiff + leftover) / FPS);
 				for(var i = 0; i < numUpdates; i++) {
+					x = x + 1;
+					if(x % 1 == 0)	 {
+						bgScale+=0.01;
+						game_model.sprites[9].setScaleX(bgScale);
+						game_model.sprites[9].setScaleY(bgScale);
+						game_model.sprites[9].setY(game_model.sprites[9].getY()-1*bgScale);
+						game_model.sprites[9].setX(game_model.width/2-75*bgScale);
+						game_view.bglayer.draw();
+					}
+
 					hzPoints = [];
 					for(var j = 0; j < game_model.myLineModel.length; j++) {
 						game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin(x*(Math.PI/180))+2.5);
