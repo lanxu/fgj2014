@@ -5,7 +5,7 @@
  * Contains:
  * - Mainloop
  */
-define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel'], function (Backbone, Kinetic, Howler, JQuery,GameModel, GameView,LineModel) {
+define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel', 'obstaclemodel'], function (Backbone, Kinetic, Howler, JQuery,GameModel, GameView,LineModel, ObstacleModel) {
 
 
 	var keyStates = [];
@@ -48,6 +48,13 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var movingtoline = 0;
 			var playerspeedx = 0;
 			var playerspeedy = 0;
+
+
+			var numObstacles = 4;
+			var obstacle = [];
+			var curObstacleLine = [];
+
+
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
 			});
@@ -129,15 +136,15 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						}
 
 
-						if(keyStates[37] === true) {
-							console.log('left');
-							if(game_model.currentLine > 0) {
-								moving = true;
-								playerspeedy = -15;
-								movingtoline = game_model.currentLine--;
+							if(keyStates[37] === true) {
+								console.log('left');
+								if(game_model.currentLine > 0) {
+									moving = true;
+									playerspeedy = -15;
+									movingtoline = game_model.currentLine--;
 
+								}
 							}
-						}
 						if(keyStates[38] === true) {
 							console.log('up');
 						}
@@ -195,22 +202,51 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								playerspeedy += acc * dy;
 							}
 							// limit
-							
-						/*	if(playerspeedx > 5) playerspeedx = 5;
-							if(playerspeedx < -5) playerspeedx = -5;
-							if(playerspeedy > 5) playerspeedy = 5;
-							if(playerspeedy < -5) playerspeedy = -5;
-						*/
+
+							/*	if(playerspeedx > 5) playerspeedx = 5;
+								if(playerspeedx < -5) playerspeedx = -5;
+								if(playerspeedy > 5) playerspeedy = 5;
+								if(playerspeedy < -5) playerspeedy = -5;
+								*/
 							game_model.myImg.setX( game_model.myImg.getX()+playerspeedx);
 							game_model.myImg.setY( game_model.myImg.getY()+playerspeedy);
 
 							if( Math.abs(game_model.myImg.getX() - targetx) <= 10 &&
-							    Math.abs(game_model.myImg.getY() - targety) <= 10) {
-								    moving = false;
+									Math.abs(game_model.myImg.getY() - targety) <= 10) {
+										moving = false;
+									}
+						}
+
+					}
+					if(game_model.myLineModel[0].getPoint(190) !== null && obstacle[0] === undefined)
+					{
+						obstacle[0] = new ObstacleModel(game_model.sprites[5], game_model.myLineModel[0], -1,100);
+						obstacle[1] = new ObstacleModel(game_model.sprites[6], game_model.myLineModel[1], -1,100);
+						obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[2], -1,100);
+						obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[3], -1,100);
+					}
+
+					for(var j=0;j<numObstacles;j++) {
+						if(obstacle[j] !== undefined) {
+							obstacle[j].updatePosition();
+
+							if(obstacle[j].getCurrentPoint() < 40) {
+								var obsLine = Math.floor((Math.random()*4));
+								curObstacleLine[j] = obsLine;
+								obstacle[j] = new ObstacleModel(game_model.sprites[j+5], game_model.myLineModel[obsLine], -(Math.random()*2+0.5),195);
+							}
+
+							oPos = obstacle[j].getCurrentPoint();
+
+							if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine) {
+								console.log("Collision in line "+curObstacleLine.toString());
 							}
 						}
-						
 					}
+
+
+					// Check if player has collided with an object
+
 
 					// If Samsung android browser is detected
 					/*					if (window.navigator && window.navigator.userAgent.indexOf('534.30') > 0) {

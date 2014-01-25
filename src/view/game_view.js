@@ -79,24 +79,31 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					    console.log('Log:');
 					    console.log(this);
 
-					    this.bglayer.add(this.model.backgrounds[0]);
-					    //this.bglayer.add(this.model.sprites[2]);
-					    this.bglayer.add(this.model.sprites[1]);
+				
+					this.bglayer.add(this.model.backgrounds[0]);
+					//this.bglayer.add(this.model.sprites[2]);
+					this.bglayer.add(this.model.sprites[1]);
+
 					    for(var i = 0; i < 100; i++) {
 						    this.layer.add(this.model.stars[i]);
 					    }
-					    this.layer.add(this.model.myLine[0]);
-					    this.layer.add(this.model.myLine[1]);
-					    this.layer.add(this.model.myLine[2]);
-					    this.layer.add(this.model.myLine[3]);
-					    this.layer.add(this.model.myHzLine);
-					    this.layer.add(this.model.myImg);
-					    this.layer.add(this.model.livesText);
-					    //this.layer.draw();
-					    this.stage.add(this.bglayer);
-					    this.stage.add(this.layer);
-					    this.stage.add(this.debuglayer);
-					    callback();
+					this.layer.add(this.model.myLine[0]);
+					this.layer.add(this.model.myLine[1]);
+					this.layer.add(this.model.myLine[2]);
+					this.layer.add(this.model.myLine[3]);
+					this.layer.add(this.model.myHzLine);
+					this.layer.add(this.model.sprites[5]);
+					this.layer.add(this.model.sprites[6]);
+					this.layer.add(this.model.sprites[7]);
+					this.layer.add(this.model.sprites[8]);
+					this.layer.add(this.model.myImg);
+					this.layer.add(this.model.livesText);
+					//this.layer.draw();
+					this.stage.add(this.bglayer);
+					this.stage.add(this.layer);
+					this.stage.add(this.debuglayer);
+					callback();
+
 
 
 				    }).bind(this)	    

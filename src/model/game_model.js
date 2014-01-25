@@ -1,4 +1,4 @@
-define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone, Kinetic, LineModel) {
+define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (Config, Backbone, Kinetic, LineModel, ObstacleModel) {
 	var GameModel = Backbone.Model.extend({
 		name: 'The best game ever',
 	    myRect: null,
@@ -27,16 +27,16 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 					    Math.random()*900+100);
 			    this.starsVelocity.splice(-1,0,Math.random()*10+1);
 			    /*this.stars[i] = new Kinetic.Star({
-				    x: this.width/2,
-				    y: this.height/2,
-				    numPoints: 5,
-				    innerRadius: 2,
-				    outerRadius: 4,
-				    fill: 'white',
-				    stroke: 'white',
-				    opacity: 1,
-				    strokeWidth: 1
-			    });*/
+			      x: this.width/2,
+			      y: this.height/2,
+			      numPoints: 5,
+			      innerRadius: 2,
+			      outerRadius: 4,
+			      fill: 'white',
+			      stroke: 'white',
+			      opacity: 1,
+			      strokeWidth: 1
+			      });*/
 			    this.stars[i] = new Kinetic.Circle({
 				    x: this.width/2,
 				    y: this.height/2,
@@ -87,7 +87,11 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 				    './web/images/life.png',
 				    './web/images/title.png',
 				    './web/images/title_extreme.png',
-				    './web/images/space.jpg'
+				    './web/images/space.jpg',
+				    './web/images/surfer.png',
+				    './web/images/title.png',
+				    './web/images/surfer.png',
+				    './web/images/title.png'
 				    );
 		    loadImages(sources,
 				    (function() {
