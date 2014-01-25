@@ -29,6 +29,12 @@ define(['config','backbone','kinetic'], function (Config, Backbone, Kinetic) {
 			}
 		}
 		that.getPoint = getPoint;
+		var getPointDiffAngle = function(pointNum) {
+			var angle1 = Math.atan2(points[pointNum+1]-points[pointNum-1],points[pointNum]-points[pointNum-2])+Math.PI/2;
+			console.log(angle1*(180/Math.PI));
+			return angle1;
+		}
+		that.getPointDiffAngle = getPointDiffAngle;
 		var movePoints = function() {
 			for(var i = 0;i < points.length/2;i++) {
 				points[i*2] += Math.sin(pointAngles[i])*3;
