@@ -147,17 +147,17 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								movingtoline = game_model.currentLine--;
 						/*		movespeedx = Math.abs(targetx - game_model.myImg.getX())/60;
 								movespeedy = Math.abs(targety - game_model.myImg.getY())/60;*/
-								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(180);
+								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(150);
 								if(imgPoint !== null) {
 
 									var scaling_factor = (((200-120)*0.005)+0.1);	
-									var angle = game_model.myLineModel[game_model.currentLine].getPointAngle(180);
+									var angle = game_model.myLineModel[game_model.currentLine].getPointAngle(150);
 
-									targetx = imgPoint[0]+Math.sin(angle)*3*60-scaling_factor*30;
-									targety = imgPoint[1]+Math.cos(angle)*3*60-scaling_factor*105;
+									targetx = imgPoint[0]+Math.sin(angle)*3*30-scaling_factor*30;
+									targety = imgPoint[1]+Math.cos(angle)*3*30-scaling_factor*105;
 
-									movespeedx = Math.abs(targetx - game_model.myImg.getX())/60;
-									movespeedy = Math.abs(targety - game_model.myImg.getY())/60;
+									movespeedx = Math.abs(targetx - game_model.myImg.getX())/30;
+									movespeedy = Math.abs(targety - game_model.myImg.getY())/30;
 								}
 
 							}
@@ -173,16 +173,16 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								movingtoline = game_model.currentLine+1;
 								game_model.currentLine++;
 
-								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(180);
+								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(150);
 								if(imgPoint !== null) {
 									var scaling_factor = (((200-120)*0.005)+0.1);	
-									var angle = game_model.myLineModel[game_model.currentLine].getPointAngle(180);
-									targetx = imgPoint[0]+Math.sin(angle)*3*60-scaling_factor*30;
-									targety = imgPoint[1]+Math.cos(angle)*3*60-scaling_factor*105;
+									var angle = game_model.myLineModel[game_model.currentLine].getPointAngle(150);
+									targetx = imgPoint[0]+Math.sin(angle)*3*30-scaling_factor*30;
+									targety = imgPoint[1]+Math.cos(angle)*3*30-scaling_factor*105;
 
 
-									movespeedx = Math.abs(targetx - game_model.myImg.getX())/60;
-									movespeedy = Math.abs(targety - game_model.myImg.getY())/60;
+									movespeedx = Math.abs(targetx - game_model.myImg.getX())/30;
+									movespeedy = Math.abs(targety - game_model.myImg.getY())/30;
 								}
 							}
 						}

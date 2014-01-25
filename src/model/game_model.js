@@ -18,6 +18,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 	    starsPosition: [],
 	    starsVelocity: [],
 	    stars: [],
+	    particles: [],
 
 	    initialize: function() {
 		    for(var i = 0; i < 100; i++) {
