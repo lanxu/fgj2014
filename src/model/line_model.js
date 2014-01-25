@@ -41,6 +41,14 @@ define(['config','backbone','kinetic'], function (Config, Backbone, Kinetic) {
 			}
 		}
 		that.movePoints = movePoints;
+		var getPointAngle = function(pointNum) {
+			if(pointNum < points.length/2) {
+				return pointAngles[pointNum] 
+			} else {
+				return null;
+			}
+		}
+		that.getPointAngle = getPointAngle;
 		return that;
 	}
 	return LineModel;

@@ -45,7 +45,9 @@ window.addEventListener('keyup', onKeyUp, true);
 		var leftover = 0;
 		var selectPoint = 199;
 		
+		var numObstacles = 4;
 		var obstacle = [];
+		var curObstacleLine = [];
 		
 
 		game_view.layer.on('mousemove', function() {
@@ -134,38 +136,27 @@ window.addEventListener('keyup', onKeyUp, true);
 					obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[2], -1,100);
 					obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[3], -1,100);
 				}
-				if(obstacle[0] !== undefined) {
-					obstacle[0].updatePosition();
 				
-					if(obstacle[0].getCurrentPoint() < 40) {
-					obstacle[0] = new ObstacleModel(game_model.sprites[5], game_model.myLineModel[Math.floor((Math.random()*4))], -(Math.random()*2+0.5),195);
-				
-					}
-				}
-				if(obstacle[1] !== undefined) {
-					obstacle[1].updatePosition();
-				
-					if(obstacle[1].getCurrentPoint() < 40) {
-					obstacle[1] = new ObstacleModel(game_model.sprites[6], game_model.myLineModel[Math.floor((Math.random()*4))], -(Math.random()*2+0.5),195);
-				
-					}
-				}
-				if(obstacle[2] !== undefined) {
-					obstacle[2].updatePosition();
+				for(var j=0;j<numObstacles;j++) {
+					if(obstacle[j] !== undefined) {
+						obstacle[j].updatePosition();
 					
-					if(obstacle[2].getCurrentPoint() < 40) {
-					obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[Math.floor((Math.random()*4))], -(Math.random()*2+0.5),195);
-				
+						if(obstacle[j].getCurrentPoint() < 40) {
+							var obsLine = Math.floor((Math.random()*4));
+							curObstacleLine[j] = obsLine;
+							obstacle[j] = new ObstacleModel(game_model.sprites[j+5], game_model.myLineModel[obsLine], -(Math.random()*2+0.5),195);
+						}
+						
+						oPos = obstacle[j].getCurrentPoint();
+						
+						if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine) {
+							console.log("Collision in line "+curObstacleLine.toString());
+						}
 					}
 				}
-				if(obstacle[3] !== undefined) {
-					obstacle[3].updatePosition();
-
-					if(obstacle[3].getCurrentPoint() < 40) {
-					obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[Math.floor((Math.random()*4))], -(Math.random()*2+0.5),195);
 				
-					}
-				}
+				
+				// Check if player has collided with an object
 				
 			
 					// If Samsung android browser is detected
