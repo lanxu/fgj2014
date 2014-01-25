@@ -106,6 +106,10 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					//this.layer.add(this.model.myImg);
 					this.layer.add(this.model.livesText);
 					this.layer.add(this.model.spriteSheet);
+					this.layer.add(this.model.myHB);
+					this.layer.add(this.model.myHBFill);
+					this.layer.add(this.model.myHBText);
+					
 					//this.layer.draw();
 					this.stage.add(this.bglayer);
 					this.stage.add(this.layer);

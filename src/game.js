@@ -50,17 +50,29 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var playerspeedy = 0;
 			var movespeedx = 0;
 			var movespeedy = 0;
-
+			var health = 0;
 			var numObstacles = 4;
 			var obstacle = [];
 			var curObstacleLine = [];
-
+			var collisionTimer = 90;
+			var collisionState = false;
 			var targetx = 0;
 			var targety = 0;
 			var bgMusicState = false;
 			var bgMusic = null;
 
+
+			var lives = 1;
 			var bgScale = 1;
+			var endGameState = false;
+
+			// State machine variables
+			var startGameState = 0;
+			var gameOverState = 1;
+			var inGameState = 2;
+			var goinState = 3;
+			var changeLevelState = 4; 
+			var state = startGameState;
 
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
@@ -76,8 +88,20 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 				var numUpdates = Math.floor((frame.timeDiff + leftover) / FPS);
 				for(var i = 0; i < numUpdates; i++) {
+
+					if(state === startGameState) {
+						// initialize
+						health = 0.5;
+						state = inGameState;
+					} else if(state === goinState) {
+					
+					} else if(state === inGameState) {
+					
+					// Update health
+					game_model.myHBFill.width(health*144);
+					
 					x = x + 1;
-					if(x % 1 == 0)	 {
+					if(x % 10 == 0)	 {
 						bgScale+=0.01;
 						game_model.sprites[9].setScaleX(bgScale);
 						game_model.sprites[9].setScaleY(bgScale);
@@ -88,6 +112,12 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 					hzPoints = [];
 					for(var j = 0; j < game_model.myLineModel.length; j++) {
+						if( j === game_model.currentLine) {
+							game_model.myLine[j].stroke('red');
+						} else {
+							game_model.myLine[j].stroke('white');
+						
+						}
 						game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin(x*(Math.PI/180))+2.5);
 						//console.log(game_model.myLineModel[j].getPoints());
 
@@ -104,33 +134,20 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 					// Logic
 					// Modify model -> see difference
 					x+=2;
-					selectPoint-=1;
-					if(selectPoint < 0) {
-						selectPoint = 199;
-					}
-
-					// Stars
-					for(var i = 0; i < 100; i++) {
-						game_model.starsPosition[i*3+2] -= game_model.starsVelocity[i];
-						game_model.stars[i].setX(game_model.starsPosition[i*3]/game_model.starsPosition[i*3+2] * 100 + game_model.width/2);
-						game_model.stars[i].setY(game_model.starsPosition[i*3+1]/game_model.starsPosition[i*3+2] * 100 + game_model.height/2);
-						if(game_model.stars[i].getX() < 0 || game_model.stars[i].getX() > game_model.width ||game_model.stars[i].getY() < 0 || game_model.stars[i].getY() > game_model.height || game_model.starsPosition[i*3+2] < 1) {
-							game_model.starsPosition[i*3] = Math.random()*1000-500;
-							game_model.starsPosition[i*3+1] =  Math.random()*1000-500;
-							game_model.starsPosition[i*3+2] = Math.random()*900+100;					
-						}
-						//b = ( (255/5) * star_zv(i)) * (1000 / starz[i])	
-						var b = ( game_model.starsVelocity[i] * (1000 / game_model.starsPosition[i*3+2] ) );
-						game_model.stars[i].setScaleX(b/200);
-						game_model.stars[i].setScaleY(b/200);
-					}	
-
+					
 					if(moving === false) {
 
 						game_model.spriteSheet.animation('idle');
 						if(game_model.myImg != null) {
 							//var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
-							selectPoint = 120;
+							if(endGameState === false) {
+								selectPoint = 120;
+							} else {
+								selectPoint += 1;
+								if(selectPoint > 199) {
+									state = gameOverState;
+								}
+							}
 							var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(selectPoint);
 							if(imgPoint !== null) {
 								if(bgMusicState === false) {
@@ -151,7 +168,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								//game_model.spriteSheet.rotation(rotation_angle+15);
 								game_model.spriteSheet.scaleY(scaling_factor);
 								game_model.spriteSheet.setX(imgPoint[0]-scaling_factor);
-								game_model.spriteSheet.setY(imgPoint[1]-scaling_factor-32);
+								game_model.spriteSheet.setY(imgPoint[1]-scaling_factor*52);
 
 
 							}
@@ -246,18 +263,47 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							if(obstacle[j].getCurrentPoint() < 40) {
 								var obsLine = Math.floor((Math.random()*4));
 								curObstacleLine[j] = obsLine;
-								obstacle[j] = new ObstacleModel(game_model.sprites[j+5], game_model.myLineModel[obsLine], -(Math.random()*2+0.5),195);
+								obstacle[j] = new ObstacleModel(game_model.sprites[j+5], game_model.myLineModel[obsLine], -(Math.random()*2+0.5),199);
 							}
 
 							oPos = obstacle[j].getCurrentPoint();
 
-							if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine) {
-								console.log("Collision in line "+curObstacleLine.toString());
+							if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine && collisionState === false) {
+								console.log("Collision in line "+curObstacleLine[j].toString());
+								if(collisionState === false) {
+									collisionState = true;
+									health = health-0.1;
+									if(health < 0) {
+										health = 0.5;
+										lives -= 1;
+										game_model.myLivesText.text(''+lives);
+										if(lives <= 0) {
+											health = 0;
+											game_model.myLivesText.text('Game Over');
+											endGameState = true;
+										}
+									}
+								}
+							}
+							
+							if(collisionState === true) {
+								collisionTimer -= 1;
+								if(collisionTimer <= 0) {
+									collisionState = false;
+									collisionTimer = 90;
+								}
+								console.log(collisionState);
 							}
 						}
 					}
 
-
+	
+					} else if(state === gameOverState) {
+					
+					} else {
+					
+					}
+				
 					// Check if player has collided with an object
 
 
@@ -286,6 +332,33 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 				   if(play_sound === true) {
 				   sound.play();
 				   }*/
+
+
+
+					// Stars
+					for(var i = 0; i < 100; i++) {
+						game_model.starsPosition[i*3+2] -= game_model.starsVelocity[i];
+						game_model.stars[i].setX(game_model.starsPosition[i*3]/game_model.starsPosition[i*3+2] * 100 + game_model.width/2);
+						game_model.stars[i].setY(game_model.starsPosition[i*3+1]/game_model.starsPosition[i*3+2] * 100 + game_model.height/2);
+						if(game_model.stars[i].getX() < 0 || game_model.stars[i].getX() > game_model.width ||game_model.stars[i].getY() < 0 || game_model.stars[i].getY() > game_model.height || game_model.starsPosition[i*3+2] < 1) {
+							game_model.starsPosition[i*3] = Math.random()*1000-500;
+							game_model.starsPosition[i*3+1] =  Math.random()*1000-500;
+							game_model.starsPosition[i*3+2] = Math.random()*900+100;					
+						}
+						//b = ( (255/5) * star_zv(i)) * (1000 / starz[i])	
+						var b = ( game_model.starsVelocity[i] * (1000 / game_model.starsPosition[i*3+2] ) );
+						game_model.stars[i].setScaleX(b/200);
+						game_model.stars[i].setScaleY(b/200);
+					}	
+
+					if(collisionState === true) {
+						game_model.spriteSheet.animation('hit');
+						game_model.spriteSheet.setScaleX(-game_model.spriteSheet.getScaleX());
+					}
+
+
+
+
 				leftover = leftover + (frame.timeDiff - numUpdates*FPS);
 			}, game_view.layer);
 

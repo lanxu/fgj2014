@@ -5,7 +5,11 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 	    myImg: null,
 	    myLineModel: [],
 	    myLine: [],
+			myHB: null,
+			myHBFill : null,
+			myHBText : null,
 	    myHzLine: null,
+			myLivesText: null,
 	    currentLine: 0,
 	    // Galaxy SII resolution
 	    width: 800,
@@ -172,7 +176,41 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 					    lineModel[1] = new LineModel(this.width,this.height);
 					    lineModel[2] = new LineModel(this.width,this.height);
 					    lineModel[3] = new LineModel(this.width,this.height);
-
+							
+							var hb = new Kinetic.Rect({
+								width: 150,
+								height: 15,
+								x: 5,
+								y: 60,
+								fill: 'black',
+								stroke: 'white',
+								strokeWidth: 3
+							});
+							
+							var hbFill = new Kinetic.Rect({
+								width: 144,
+								height: 9,
+								x: 8,
+								y: 63,
+								fill: 'red',
+								stroke: 'white',
+								strokeWidth: 0
+							});
+							
+							var moodText = new Kinetic.Text({
+						    x: 20,
+						    y: 80,
+						    text: "Mood meter",
+						    fontSize: 24,
+						    fontFamily: 'Fullkorn',
+						    fontStyle: 'bold',
+						    align: 'left',
+						    fill: 'white'
+					    });
+							this.myLivesText = this.livesText;
+							this.myHB = hb;
+							this.myHBFill = hbFill;
+							this.myHBText = moodText;
 					    this.myLine[0] = redLine;
 					    this.myLine[1] = greenLine;
 					    this.myLine[2] = blackLine;
@@ -195,6 +233,9 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 						    // x, y, width, height (3 frames)
 						    0,129,127,127,
 						    129,129,127,127,
+						    ],
+						    hit: [
+							0,257,127,127,
 						    ]
 						    },
 						    frameRate: 7,
