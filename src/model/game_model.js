@@ -1,4 +1,4 @@
-define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone, Kinetic, LineModel) {
+define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (Config, Backbone, Kinetic, LineModel, ObstacleModel) {
 	var GameModel = Backbone.Model.extend({
 		name: 'The best game ever',
 	    myRect: null,
@@ -55,7 +55,11 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 				    './web/images/life.png',
 				    './web/images/title.png',
 				    './web/images/title_extreme.png',
-				    './web/images/space.jpg'
+				    './web/images/space.jpg',
+						'./web/images/surfer.png',
+						'./web/images/title.png',
+				    './web/images/surfer.png',
+						'./web/images/title.png'
 				    );
 		    loadImages(sources,
 				    (function() {
@@ -127,7 +131,7 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 			    lineModel[1] = new LineModel(this.width,this.height);
 			    lineModel[2] = new LineModel(this.width,this.height);
 			    lineModel[3] = new LineModel(this.width,this.height);
-
+					
 
 			    this.myLine[0] = redLine;
 			    this.myLine[1] = greenLine;

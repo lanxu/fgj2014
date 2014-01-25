@@ -5,7 +5,7 @@
  * Contains:
  * - Mainloop
  */
-define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel'], function (Backbone, Kinetic, Howler, JQuery,GameModel, GameView,LineModel) {
+define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel', 'obstaclemodel'], function (Backbone, Kinetic, Howler, JQuery,GameModel, GameView,LineModel, ObstacleModel) {
 
 
 var keyStates = [];
@@ -44,6 +44,9 @@ window.addEventListener('keyup', onKeyUp, true);
 		var x = 0;
 		var leftover = 0;
 		var selectPoint = 199;
+		
+		var obstacle = [];
+		
 
 		game_view.layer.on('mousemove', function() {
 			console.log('move');
@@ -124,8 +127,47 @@ window.addEventListener('keyup', onKeyUp, true);
 					console.log('down');
 				}
 
+				if(game_model.myLineModel[0].getPoint(190) !== null && obstacle[0] === undefined)
+				{
+					obstacle[0] = new ObstacleModel(game_model.sprites[5], game_model.myLineModel[0], -1,100);
+					obstacle[1] = new ObstacleModel(game_model.sprites[6], game_model.myLineModel[1], -1,100);
+					obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[2], -1,100);
+					obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[3], -1,100);
+				}
+				if(obstacle[0] !== undefined) {
+					obstacle[0].updatePosition();
+				
+					if(obstacle[0].getCurrentPoint() < 40) {
+					obstacle[0] = new ObstacleModel(game_model.sprites[5], game_model.myLineModel[Math.floor((Math.random()*4))], -(Math.random()*2+0.5),195);
+				
+					}
+				}
+				if(obstacle[1] !== undefined) {
+					obstacle[1].updatePosition();
+				
+					if(obstacle[1].getCurrentPoint() < 40) {
+					obstacle[1] = new ObstacleModel(game_model.sprites[6], game_model.myLineModel[Math.floor((Math.random()*4))], -(Math.random()*2+0.5),195);
+				
+					}
+				}
+				if(obstacle[2] !== undefined) {
+					obstacle[2].updatePosition();
+					
+					if(obstacle[2].getCurrentPoint() < 40) {
+					obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[Math.floor((Math.random()*4))], -(Math.random()*2+0.5),195);
+				
+					}
+				}
+				if(obstacle[3] !== undefined) {
+					obstacle[3].updatePosition();
 
-
+					if(obstacle[3].getCurrentPoint() < 40) {
+					obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[Math.floor((Math.random()*4))], -(Math.random()*2+0.5),195);
+				
+					}
+				}
+				
+			
 					// If Samsung android browser is detected
 /*					if (window.navigator && window.navigator.userAgent.indexOf('534.30') > 0) {
 

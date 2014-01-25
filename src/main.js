@@ -13,7 +13,8 @@ require.config({
 		gameview: 'view/game_view',
 		game: 'game',
 		config: 'config',
-		linemodel: 'model/line_model'
+		linemodel: 'model/line_model',
+		obstaclemodel: 'model/obstacle_model'
 	},
 	shim: {
 		//underscore: { exports: '_' },
