@@ -98,13 +98,14 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					this.layer.add(this.model.myLine[1]);
 					this.layer.add(this.model.myLine[2]);
 					this.layer.add(this.model.myLine[3]);
-					this.layer.add(this.model.myHzLine);
+					//this.layer.add(this.model.myHzLine);
 					this.layer.add(this.model.sprites[5]);
 					this.layer.add(this.model.sprites[6]);
 					this.layer.add(this.model.sprites[7]);
 					this.layer.add(this.model.sprites[8]);
-					this.layer.add(this.model.myImg);
+					//this.layer.add(this.model.myImg);
 					this.layer.add(this.model.livesText);
+					this.layer.add(this.model.spriteSheet);
 					//this.layer.draw();
 					this.stage.add(this.bglayer);
 					this.stage.add(this.layer);

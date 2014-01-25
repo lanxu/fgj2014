@@ -24,6 +24,7 @@ define(['config','backbone','kinetic'], function (Config, Backbone, Kinetic) {
 				var scaling_factor = (((200-curLinePoint)*0.005)+0.1);	
 				kinImg.setX(imgPoint[0]-scaling_factor*40);
 				kinImg.setY(imgPoint[1]-scaling_factor*100);
+				//kinImg.setRotation(scaling_factor*360);
 				kinImg.scaleX(scaling_factor);
 				kinImg.scaleY(scaling_factor);
 			}

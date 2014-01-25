@@ -54,14 +54,14 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var numObstacles = 4;
 			var obstacle = [];
 			var curObstacleLine = [];
-			
+
 			var targetx = 0;
 			var targety = 0;
 			var bgMusicState = false;
 			var bgMusic = null;
-			
+
 			var bgScale = 1;
-			
+
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
 			});
@@ -127,6 +127,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 					if(moving === false) {
 
+						game_model.spriteSheet.animation('idle');
 						if(game_model.myImg != null) {
 							//var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
 							selectPoint = 120;
@@ -143,17 +144,14 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
 								var rotation_angle = -game_model.myLineModel[game_model.currentLine].getPointDiffAngle(selectPoint)*(180/Math.PI)*0.5;
 								if(game_model.currentLine > 1) {
-									//game_model.myImg.setScaleX(-game_model.myImg.getScaleX());
-									game_model.myImg.setX(imgPoint[0]+scaling_factor*30);
-									game_model.myImg.setY(imgPoint[1]-scaling_factor*105);
-									game_model.myImg.scaleX(-scaling_factor);
+									game_model.spriteSheet.scaleX(-scaling_factor);
 								} else {
-									game_model.myImg.setX(imgPoint[0]-scaling_factor*30);
-									game_model.myImg.setY(imgPoint[1]-scaling_factor*105);
-									game_model.myImg.scaleX(scaling_factor);
+									game_model.spriteSheet.scaleX(scaling_factor);
 								}
-								//game_model.myImg.rotation(rotation_angle);
-								game_model.myImg.scaleY(scaling_factor);
+								//game_model.spriteSheet.rotation(rotation_angle+15);
+								game_model.spriteSheet.scaleY(scaling_factor);
+								game_model.spriteSheet.setX(imgPoint[0]-scaling_factor);
+								game_model.spriteSheet.setY(imgPoint[1]-scaling_factor-32);
 
 
 							}
@@ -166,8 +164,6 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								moving = true;
 								playerspeedy = -15;
 								movingtoline = game_model.currentLine--;
-						/*		movespeedx = Math.abs(targetx - game_model.myImg.getX())/60;
-								movespeedy = Math.abs(targety - game_model.myImg.getY())/60;*/
 								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(150);
 								if(imgPoint !== null) {
 
@@ -177,8 +173,8 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									targetx = imgPoint[0]+Math.sin(angle)*3*30-scaling_factor*30;
 									targety = imgPoint[1]+Math.cos(angle)*3*30-scaling_factor*105;
 
-									movespeedx = Math.abs(targetx - game_model.myImg.getX())/30;
-									movespeedy = Math.abs(targety - game_model.myImg.getY())/30;
+									movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
+									movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 								}
 
 							}
@@ -202,8 +198,8 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									targety = imgPoint[1]+Math.cos(angle)*3*30-scaling_factor*105;
 
 
-									movespeedx = Math.abs(targetx - game_model.myImg.getX())/30;
-									movespeedy = Math.abs(targety - game_model.myImg.getY())/30;
+									movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
+									movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 								}
 							}
 						}
@@ -213,67 +209,24 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 					} else {
 						// Animation in progress!
-
-						if(targetx < game_model.myImg.getX()) {
+						game_model.spriteSheet.animation('jump');
+						if(targetx < game_model.spriteSheet.getX()) {
 							playerspeedx =-movespeedx;
 						}
-						if(targetx > game_model.myImg.getX()) {
+						if(targetx > game_model.spriteSheet.getX()) {
 							playerspeedx = movespeedx; 
 						}
-						if(targety < game_model.myImg.getY()) {
+						if(targety < game_model.spriteSheet.getY()) {
 							playerspeedy = -movespeedy;
 						}
-						if(targety > game_model.myImg.getY()) {
+						if(targety > game_model.spriteSheet.getY()) {
 							playerspeedy = movespeedy;
 						}
 
-						game_model.myImg.setX( game_model.myImg.getX()+playerspeedx);
-						game_model.myImg.setY( game_model.myImg.getY()+playerspeedy);
-
-						/*
-						   var scaling_factor = (((200-selectPoint)*0.005)+0.1);
-						   var targetx = 0;
-						   var targety = 0;
-						   var targets = 1;
-						   if(game_model.currentLine > 1) {
-						//game_model.myImg.setScaleX(-game_model.myImg.getScaleX());
-						targetx = (imgPoint[0]+scaling_factor*20);
-						targety = (imgPoint[1]-scaling_factor*110);
-						game_model.myImg.scaleX(-scaling_factor);
-						} else {
-						targetx = (imgPoint[0]-scaling_factor*40);
-						targety = (imgPoint[1]-scaling_factor*100);
-						game_model.myImg.scaleX(scaling_factor);
-						}
-						//game_model.myImg.rotation(rotation_angle);
-						game_model.myImg.scaleY(scaling_factor);
-
-						var acc = 0.4;
-						var dx = Math.abs(targetx - game_model.myImg.getX())/5;
-						var dy = Math.abs(targety - game_model.myImg.getY())/5;
-						//var dy = 1;
-						if(targetx < game_model.myImg.getX()) {
-						playerspeedx =-1 - acc * dx;
-						}
-						if(targetx > game_model.myImg.getX()) {
-						playerspeedx = 1 + acc * dx; 
-						}
-						if(targety < game_model.myImg.getY()) {
-						playerspeedy -= acc * dy;
-						}
-						if(targety > game_model.myImg.getY()) {
-						playerspeedy += acc * dy;
-						}
-						// limit
-						*/
-						/*	if(playerspeedx > 5) playerspeedx = 5;
-							if(playerspeedx < -5) playerspeedx = -5;
-							if(playerspeedy > 5) playerspeedy = 5;
-							if(playerspeedy < -5) playerspeedy = -5;
-							*/
-
-						if( Math.abs(game_model.myImg.getX() - targetx) <= 10 &&
-								Math.abs(game_model.myImg.getY() - targety) <= 10) {
+						game_model.spriteSheet.setX( game_model.spriteSheet.getX()+playerspeedx);
+						game_model.spriteSheet.setY( game_model.spriteSheet.getY()+playerspeedy);
+						if( Math.abs(game_model.spriteSheet.getX() - targetx) <= 10 &&
+								Math.abs(game_model.spriteSheet.getY() - targety) <= 10) {
 									moving = false;
 								}
 

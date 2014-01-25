@@ -19,6 +19,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 	    starsVelocity: [],
 	    stars: [],
 	    particles: [],
+	    spriteSheet: null,
 
 	    initialize: function() {
 		    for(var i = 0; i < 100; i++) {
@@ -75,11 +76,15 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 					    draggable: false,
 				    });
 
-				    images[src].onload = function() {
+				    images[src].onload = (function() {
+					    //console.log(this.sprites[src].attrs.image);
+					    //this.sprites[src].attrs.image.width;
+					    //this.sprites[src].offsetX(1000);
+					    //this.sprites[src].offsetY(1000);
 					    if(++loadedImages >= numImages) {
 						    callback(images);
 					    }
-				    };
+				    }).bind(this);
 				    images[src].src = sources[src];
 			    }
 		    }.bind(this);
@@ -93,7 +98,8 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 				    './web/images/obstacle1.png',
 				    './web/images/obstacle1.png',
 				    './web/images/obstacle1.png',
-				    './web/images/planet1.png' // 9
+				    './web/images/planet1.png', // 9
+				    './web/images/sprite.png'
 
 				    );
 		    loadImages(sources,
@@ -167,13 +173,35 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 					    lineModel[2] = new LineModel(this.width,this.height);
 					    lineModel[3] = new LineModel(this.width,this.height);
 
-
 					    this.myLine[0] = redLine;
 					    this.myLine[1] = greenLine;
 					    this.myLine[2] = blackLine;
 					    this.myLine[3] = blueLine;
 					    this.myHzLine = hzLine;
 					    this.myLineModel = lineModel;
+
+					    this.spriteSheet = new Kinetic.Sprite({
+						    x: 250,
+						    y: 40,
+						    image: this.sprites[10].attrs.image,
+						    animation: 'idle',
+						    animations: {
+							    idle: [
+						    // x, y, width, height (4 frames)
+						    0,0,127,127,
+						    129,129,127,127,
+						    ],
+						    jump: [
+						    // x, y, width, height (3 frames)
+						    0,129,127,127,
+						    129,129,127,127,
+						    ]
+						    },
+						    frameRate: 7,
+						    frameIndex: 0,
+						    offset: {x:64, y:64}
+					    });
+					    //this.spriteSheet.start();
 					    callback();
 
 				    }).bind(this));
