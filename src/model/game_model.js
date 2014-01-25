@@ -6,13 +6,22 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 	    myLineModel: [],
 	    myLine: [],
 	    myHzLine: null,
-
+	    currentLine: 0,
 	    // Galaxy SII resolution
 	    width: 800,
 	    height: 480,
 	    imageObj: null,
 	    sprites: [],
+	    backgrounds: [],
+	    lives: 3,
+	    livesText: null,
 	    initialize: function() {
+
+
+
+
+	    },
+	    createRect : function(callback) {
 		    var loadImages = function(sources, callback) {
 			    //A second array for storing Kinetic Objects
 			    var images = {};
@@ -48,41 +57,22 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 				    './web/images/title_extreme.png',
 				    './web/images/space.jpg'
 				    );
-
 		    loadImages(sources,
 				    (function() {
 					    console.log('all loaded');
 					    console.log(this.sprites);
-				    }).bind(this));
-
-
-	    },
-	    createRect : function(callback) {
-		    this.imageObj= new Image();
-		    this.imageObj.onload = (function() {
-			    var yoda = new Kinetic.Image({
-				    x: 300,
-				y: 100,
-				image: this.imageObj,
-				draggable: false,
-			    });
-			    console.log('Loaded');
-			    console.log(this.sprites[0]);
-			    this.myImg = this.sprites[0];
-			    console.log('Created a rectangle');
-			    var rect=new Kinetic.Rect({
-				    x: 10,
-				y: 10,
-				width: 100,
-				height: 50,
-				fill: 'green',
-				stroke: 'black',
-				strokeWidth: 1,
-				offset: [0, 0],
-				draggable: false,
-			    });
-
-			    var redLine = new Kinetic.Line({
+					    this.backgrounds[0] = this.sprites[4];
+					    this.backgrounds[0].setX(0);
+					    this.backgrounds[0].setY(0);
+					    this.myImg = this.sprites[0];
+					    this.sprites[2].setX(10);
+					    this.sprites[2].setY(10);
+					    this.sprites[1].setX(10);
+					    this.sprites[1].setY(10);
+					    this.sprites[1].setScaleX(0.5);
+					    this.sprites[1].setScaleY(0.5);
+				   
+			var redLine = new Kinetic.Line({
 				    points: [],
 				stroke: 'red',
 				strokeWidth: 3,
@@ -121,6 +111,16 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 				lineCap: 'round',
 				lineJoin: 'round'
 			    });
+			this.livesText = new Kinetic.Text({
+				x: 70,
+				y: 10,
+				text: '' + this.lives,
+				fontSize: 42,
+				fontFamily: 'Fullkorn',
+				fontStyle: 'bold',
+				align: 'left',
+				fill: 'white'
+			});
 
 			    var lineModel = [];
 			    lineModel[0] = new LineModel(this.width,this.height);
@@ -129,7 +129,6 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 			    lineModel[3] = new LineModel(this.width,this.height);
 
 
-			    this.myRect = rect;
 			    this.myLine[0] = redLine;
 			    this.myLine[1] = greenLine;
 			    this.myLine[2] = blackLine;
@@ -137,10 +136,8 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 			    this.myHzLine = hzLine;
 			    this.myLineModel = lineModel;
 			    callback();
-		    }).bind(this);
-		    this.imageObj.src = './web/images/HTML5_Badge_128.png';
-		    //this.imageObj.src ='http://www.html5canvastutorials.com/demos/assets/yoda.jpg';
 
+				    }).bind(this));
 		    return null;
 	    }
 	});

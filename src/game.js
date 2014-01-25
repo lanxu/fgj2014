@@ -5,7 +5,7 @@
  * Contains:
  * - Mainloop
  */
-define(['backbone','kinetic','howler','jquery','gamemodel','gameview'], function (Backbone, Kinetic, Howler, JQuery,GameModel, GameView) {
+define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel'], function (Backbone, Kinetic, Howler, JQuery,GameModel, GameView,LineModel) {
 
 
 var keyStates = [];
@@ -32,9 +32,9 @@ window.addEventListener('keyup', onKeyUp, true);
 		var game_view = new GameView({ el: '#container', model: game_model });
 
 		console.log('Render');
-		game_view.render();
-
-		//var sound = new Howl({
+		game_view.render(function() {
+		
+				//var sound = new Howl({
 		//  urls: ['web/sounds/Electro_House_Loop.ogg'],
 		//  loop: true,
 		//  volume: 0.5,
@@ -62,6 +62,7 @@ window.addEventListener('keyup', onKeyUp, true);
 				hzPoints = [];
 				for(var j = 0; j < game_model.myLineModel.length; j++) {
 					game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin(x*(Math.PI/180))+2.5);
+					//console.log(game_model.myLineModel[j].getPoints());
 					
 					game_model.myLine[j].attrs.points = game_model.myLineModel[j].getPoints();
 					
@@ -75,30 +76,53 @@ window.addEventListener('keyup', onKeyUp, true);
 				game_model.myHzLine.attrs.points = hzPoints;
 				// Logic
 				// Modify model -> see difference
-				if(game_model.myRect != null) {
-					game_model.myRect.setX(x);
-					game_model.myRect.setY(10+Math.random()*5);
 					x+=2;
 					selectPoint-=1;
 					if(selectPoint < 0) {
 						selectPoint = 199;
 					}
-				}
-							
 				if(game_model.myImg != null) {
 					//var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
-					selectPoint = 100;
-					var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
+					selectPoint = 120;
+					var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(selectPoint);
 					if(imgPoint !== null) {
+
 						var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
-						game_model.myImg.setX(imgPoint[0]-scaling_factor*40);
-						game_model.myImg.setY(imgPoint[1]-scaling_factor*100);
-						game_model.myImg.scaleX(scaling_factor);
+						if(game_model.currentLine > 1) {
+							//game_model.myImg.setScaleX(-game_model.myImg.getScaleX());
+							game_model.myImg.setX(imgPoint[0]+scaling_factor*20);
+							game_model.myImg.setY(imgPoint[1]-scaling_factor*110);
+							game_model.myImg.scaleX(-scaling_factor);
+						} else {
+							game_model.myImg.setX(imgPoint[0]-scaling_factor*40);
+							game_model.myImg.setY(imgPoint[1]-scaling_factor*100);
+							game_model.myImg.scaleX(scaling_factor);
+						}
 						game_model.myImg.scaleY(scaling_factor);
 
 					}
-					//console.log(keyStates);
 				}
+				if(keyStates[37] === true) {
+					console.log('left');
+					if(game_model.currentLine > 0) {
+						game_model.currentLine--;
+					}
+				}
+				if(keyStates[38] === true) {
+					console.log('up');
+				}
+				if(keyStates[39] === true) {
+					console.log('right');
+					if(game_model.currentLine <3) {
+						game_model.currentLine++;
+					}
+				}
+				if(keyStates[40] === true) {
+					console.log('down');
+				}
+
+
+
 					// If Samsung android browser is detected
 /*					if (window.navigator && window.navigator.userAgent.indexOf('534.30') > 0) {
 
@@ -130,6 +154,10 @@ window.addEventListener('keyup', onKeyUp, true);
 		gameLayerLoop.start();
 	
 		console.log(game_model);
+
+		
+		});
+
 
 	};
 

@@ -20,6 +20,7 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 		tagName: 'span',
 		stage: null,
 		layer: null,
+	        bglayer: null,
 		debuglayer: null,
 
 		initialize: function (options) {
@@ -30,11 +31,10 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 			this.stage = new Kinetic.Stage({ container: this.el, width: this.model.width, height: this.model.height });
 			// Create layers
 			this.layer = new Kinetic.Layer();
+			this.bglayer = new Kinetic.Layer();
 			this.debuglayer = new Kinetic.Layer();
 
-			// Add Layers to stage
-			this.stage.add(this.layer);
-			this.stage.add(this.debuglayer);
+
 /*			$(this.stage.getContent()).on('click', function() {
 				var myNode = document.querySelector("#container");
 				
@@ -62,7 +62,9 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 				fill: 'white'
 			});
 			this.debuglayer.add(fpsText);
-
+			// Add Layers to stage
+			//this.stage.add(this.layer);
+			//this.stage.add(this.debuglayer);
 			// Start debug animation
 			var debuganim = new Kinetic.Animation(function(frame) {
 				fpsText.setText('FPS: ' + Math.floor(frame.frameRate));
@@ -70,20 +72,28 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 			debuganim.start();
 
 		},
-		render: function () {
+		render: function (callback) {
 			var rect = this.model.createRect(
 				(function() {
 					//console.log('Log: '+this); 
 					console.log('Log:');
 					console.log(this);
 					
+					this.bglayer.add(this.model.backgrounds[0]);
+					//this.bglayer.add(this.model.sprites[2]);
+					this.bglayer.add(this.model.sprites[1]);
 					this.layer.add(this.model.myLine[0]);
 					this.layer.add(this.model.myLine[1]);
 					this.layer.add(this.model.myLine[2]);
 					this.layer.add(this.model.myLine[3]);
 					this.layer.add(this.model.myHzLine);
 					this.layer.add(this.model.myImg);
+					this.layer.add(this.model.livesText);
+					//this.layer.draw();
+					this.stage.add(this.bglayer);
 					this.stage.add(this.layer);
+					this.stage.add(this.debuglayer);
+					callback();
 
 
 		}).bind(this)	    
