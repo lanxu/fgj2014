@@ -88,6 +88,7 @@ window.addEventListener('keyup', onKeyUp, true);
 					if(imgPoint !== null) {
 
 						var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
+						var rotation_angle = -game_model.myLineModel[game_model.currentLine].getPointDiffAngle(selectPoint)*(180/Math.PI)*0.5;
 						if(game_model.currentLine > 1) {
 							//game_model.myImg.setScaleX(-game_model.myImg.getScaleX());
 							game_model.myImg.setX(imgPoint[0]+scaling_factor*20);
@@ -98,7 +99,9 @@ window.addEventListener('keyup', onKeyUp, true);
 							game_model.myImg.setY(imgPoint[1]-scaling_factor*100);
 							game_model.myImg.scaleX(scaling_factor);
 						}
+						game_model.myImg.rotation(rotation_angle);
 						game_model.myImg.scaleY(scaling_factor);
+						
 
 					}
 				}
