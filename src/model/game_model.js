@@ -15,8 +15,40 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 	    backgrounds: [],
 	    lives: 3,
 	    livesText: null,
-	    initialize: function() {
+	    starsPosition: [],
+	    starsVelocity: [],
+	    stars: [],
 
+	    initialize: function() {
+		    for(var i = 0; i < 100; i++) {
+			    this.starsPosition.splice(-1, 0, 
+					    Math.random()*2000-1000,
+					    Math.random()*2000-1000, 
+					    Math.random()*900+100);
+			    this.starsVelocity.splice(-1,0,Math.random()*10+1);
+			    /*this.stars[i] = new Kinetic.Star({
+				    x: this.width/2,
+				    y: this.height/2,
+				    numPoints: 5,
+				    innerRadius: 2,
+				    outerRadius: 4,
+				    fill: 'white',
+				    stroke: 'white',
+				    opacity: 1,
+				    strokeWidth: 1
+			    });*/
+			    this.stars[i] = new Kinetic.Circle({
+				    x: this.width/2,
+				    y: this.height/2,
+				    radius: 5,
+				    fill: 'white',
+				    stroke: 'white',
+				    opacity: 1,
+				    strokeWidth: 1
+			    });
+
+		    }
+		    console.log(this.starsPosition.length);
 
 
 
@@ -71,71 +103,71 @@ define(['config','backbone','kinetic', 'linemodel'], function (Config, Backbone,
 					    this.sprites[1].setY(10);
 					    this.sprites[1].setScaleX(0.5);
 					    this.sprites[1].setScaleY(0.5);
-				   
-			var redLine = new Kinetic.Line({
-				    points: [],
-				stroke: 'red',
-				strokeWidth: 3,
-				lineCap: 'round',
-				lineJoin: 'round'
-			    });
 
-			    var greenLine = new Kinetic.Line({
-				    points: [],
-				stroke: 'green',
-				strokeWidth: 3,
-				lineCap: 'round',
-				lineJoin: 'round'
-			    });
+					    var redLine = new Kinetic.Line({
+						    points: [],
+						stroke: 'red',
+						strokeWidth: 3,
+						lineCap: 'round',
+						lineJoin: 'round'
+					    });
 
-			    var blackLine = new Kinetic.Line({
-				    points: [],
-				stroke: 'white',
-				strokeWidth: 3,
-				lineCap: 'round',
-				lineJoin: 'round'
-			    });
+					    var greenLine = new Kinetic.Line({
+						    points: [],
+						stroke: 'green',
+						strokeWidth: 3,
+						lineCap: 'round',
+						lineJoin: 'round'
+					    });
 
-			    var blueLine = new Kinetic.Line({
-				    points: [],
-				stroke: 'blue',
-				strokeWidth: 3,
-				lineCap: 'round',
-				lineJoin: 'round'
-			    });
+					    var blackLine = new Kinetic.Line({
+						    points: [],
+						stroke: 'white',
+						strokeWidth: 3,
+						lineCap: 'round',
+						lineJoin: 'round'
+					    });
 
-			    var hzLine = new Kinetic.Line({
-				    points: [],
-				stroke: 'white',
-				strokeWidth: 2,
-				lineCap: 'round',
-				lineJoin: 'round'
-			    });
-			this.livesText = new Kinetic.Text({
-				x: 70,
-				y: 10,
-				text: '' + this.lives,
-				fontSize: 42,
-				fontFamily: 'Fullkorn',
-				fontStyle: 'bold',
-				align: 'left',
-				fill: 'white'
-			});
+					    var blueLine = new Kinetic.Line({
+						    points: [],
+						stroke: 'blue',
+						strokeWidth: 3,
+						lineCap: 'round',
+						lineJoin: 'round'
+					    });
 
-			    var lineModel = [];
-			    lineModel[0] = new LineModel(this.width,this.height);
-			    lineModel[1] = new LineModel(this.width,this.height);
-			    lineModel[2] = new LineModel(this.width,this.height);
-			    lineModel[3] = new LineModel(this.width,this.height);
+					    var hzLine = new Kinetic.Line({
+						    points: [],
+						stroke: 'white',
+						strokeWidth: 2,
+						lineCap: 'round',
+						lineJoin: 'round'
+					    });
+					    this.livesText = new Kinetic.Text({
+						    x: 70,
+						    y: 10,
+						    text: '' + this.lives,
+						    fontSize: 42,
+						    fontFamily: 'Fullkorn',
+						    fontStyle: 'bold',
+						    align: 'left',
+						    fill: 'white'
+					    });
+
+					    var lineModel = [];
+					    lineModel[0] = new LineModel(this.width,this.height);
+					    lineModel[1] = new LineModel(this.width,this.height);
+					    lineModel[2] = new LineModel(this.width,this.height);
+					    lineModel[3] = new LineModel(this.width,this.height);
 
 
-			    this.myLine[0] = redLine;
-			    this.myLine[1] = greenLine;
-			    this.myLine[2] = blackLine;
-			    this.myLine[3] = blueLine;
-			    this.myHzLine = hzLine;
-			    this.myLineModel = lineModel;
-			    callback();
+					    this.myLine[0] = redLine;
+					    this.myLine[1] = greenLine;
+					    this.myLine[2] = blackLine;
+					    this.myLine[3] = blueLine;
+					    this.myHzLine = hzLine;
+					    this.myLineModel = lineModel;
+					    callback();
 
 				    }).bind(this));
 		    return null;
