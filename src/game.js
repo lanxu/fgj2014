@@ -85,13 +85,19 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			    loop: false,
 			    volume: 0.3,
 			});
-			
 
+			bgMusic = new Howl({
+				urls: ['web/sounds/fgj2014_running.ogg'],
+				loop: true,
+				volume: 0.3,
+			});
 
 			var surfTimer = 0;
 			var surfEnable = false;
 			var betweenLines = false;
 			var betweenLinesCounter = 20;
+			var moveTimer = 30;
+
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
 			});
@@ -108,11 +114,15 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 				for(var i = 0; i < numUpdates; i++) {
 					if(state === initState) {
 						health = 0.5;
+						// Update health
+						game_model.myHBFill.width(health*144);
 						game_model.myHB.setVisible(false);
 						surfEnable = true;
 						surfTimer = 0;
 						endGameState = false;
-						x = 0;	
+						x = 0;
+						lives = 3;
+						moveTimer = 30;
 						game_model.myHBFill.setVisible(false);
 						game_model.myHBText.setVisible(false);
 						game_model.myLivesText.setVisible(false);
@@ -120,6 +130,9 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						game_model.title_extreme.setVisible(true);
 						game_model.startText.setVisible(true);
 						game_model.mySurfText.setVisible(false);
+						game_model.mySurfText.setX(500);
+						game_model.mySurfText.setY(10);
+						game_model.mySurfText.text('Surf Time: ' + Math.floor(surfTimer/30) + ' s');
 						for(var i = 0; i < 3; i++) {
 							game_model.liveImgs[i].setVisible(false);
 						}
@@ -133,10 +146,10 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								obstacle[j].clear();
 							}
 						}
-					    game_model.sprites[5].setX(-200);
-					    game_model.sprites[6].setX(-200);
-					    game_model.sprites[7].setX(-200);
-					    game_model.sprites[8].setX(-200);
+						game_model.sprites[5].setX(-200);
+						game_model.sprites[6].setX(-200);
+						game_model.sprites[7].setX(-200);
+						game_model.sprites[8].setX(-200);
 						game_view.bglayer.draw();
 						state = startGameState;
 
@@ -220,18 +233,21 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							  hzPoints.push(curPoint[0]);
 							  hzPoints.push(curPoint[1]);
 							  }*/
-							
+
 						}
-						
+
 						x++;
 						if(x > 200) {
 							state = inGameState;
 							windupSound.stop();
+							bgMusic.play();
 						}
-						
+
 
 
 					} else if(state === inGameState) {
+
+
 
 						if(betweenLines === true) {
 							betweenLinesCounter--;
@@ -250,7 +266,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							}
 							healthUpTimer = 150;
 							if(health >= 0.5 && currentMood == 0) {
-							
+
 								game_model.backgrounds[0].tween = new Kinetic.Tween({
 									node: game_model.backgrounds[0],
 									//x: -170,
@@ -266,7 +282,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								currentMood = 1;
 							}
 							if(health >= 0.75 && currentMood == 1) {
-							
+
 								game_model.backgrounds[1].tween = new Kinetic.Tween({
 									node: game_model.backgrounds[1],
 									//x: -170,
@@ -282,7 +298,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								currentMood = 2;
 							}
 
-							
+
 						}
 
 						if(surfEnable === true && endGameState === false) {
@@ -293,16 +309,16 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						// Update health
 						game_model.myHBFill.width(health*144);
 
-							bgScale+=0.001;
-							game_model.sprites[9].setScaleX(bgScale);
-							game_model.sprites[9].setScaleY(bgScale);
-							game_model.sprites[9].setY(game_model.sprites[9].getY()-0.1*bgScale);
-							game_model.sprites[9].setX(game_model.width/2-75*bgScale);
-							//game_view.bglayer.draw();
-/*							for(var h = 0; h < 3; h++) {
-								game_model.backgrounds[h].setX(-0.1*bgScale);
-								game_view.bglayer.draw();
-								}*/
+						bgScale+=0.001;
+						game_model.sprites[9].setScaleX(bgScale);
+						game_model.sprites[9].setScaleY(bgScale);
+						game_model.sprites[9].setY(game_model.sprites[9].getY()-0.1*bgScale);
+						game_model.sprites[9].setX(game_model.width/2-75*bgScale);
+						//game_view.bglayer.draw();
+						/*							for(var h = 0; h < 3; h++) {
+													game_model.backgrounds[h].setX(-0.1*bgScale);
+													game_view.bglayer.draw();
+													}*/
 
 						hzPoints = [];
 						for(var j = 0; j < game_model.myLineModel.length; j++) {
@@ -344,14 +360,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								}
 								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(selectPoint);
 								if(imgPoint !== null) {
-									if(bgMusicState === false) {
-										bgMusic = new Howl({
-											urls: ['web/sounds/fgj2014_running.ogg'],
-											loop: true,
-											volume: 0.3,
-										}).play();
-										bgMusicState = true;
-									}
+
 									var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
 									var rotation_angle = -game_model.myLineModel[game_model.currentLine].getPointDiffAngle(selectPoint)*(180/Math.PI)*0.5;
 									if(game_model.currentLine > 1) {
@@ -441,10 +450,12 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 							game_model.spriteSheet.setX( game_model.spriteSheet.getX()+playerspeedx);
 							game_model.spriteSheet.setY( game_model.spriteSheet.getY()+playerspeedy);
-							if( Math.abs(game_model.spriteSheet.getX() - targetx) <= 10 &&
-									Math.abs(game_model.spriteSheet.getY() - targety) <= 10) {
-										moving = false;
-									}
+							if( moveTimer <= 0) {
+								moving = false;
+								moveTimer = 30;
+							} else {
+								moveTimer -= 1;
+							}
 
 						}
 						if(game_model.myLineModel[0].getPoint(190) !== null && obstacle[0] === undefined)
@@ -471,37 +482,36 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									if(collisionState === false) {
 										collisionState = true;
 										health = health-0.2;
-								if(health < 0.75 && currentMood == 2) {
-								game_model.backgrounds[1].tween = new Kinetic.Tween({
-									node: game_model.backgrounds[1],
-									//x: -170,
-									//y: -315,
-									//scaleX: 0.5,
-									//scaleY: 0.5,
-									opacity:1,
-									easing: Kinetic.Easings.EaseInOut,
-									duration: 7
+										if(health < 0.75 && currentMood == 2) {
+											game_model.backgrounds[1].tween = new Kinetic.Tween({
+												node: game_model.backgrounds[1],
+												//x: -170,
+												//y: -315,
+												//scaleX: 0.5,
+												//scaleY: 0.5,
+												opacity:1,
+												easing: Kinetic.Easings.EaseInOut,
+												duration: 7
 
-								});
-								game_model.backgrounds[1].tween.play();
-								currentMood = 1;
-									}
-								if(health < 0.5 && currentMood == 1) {
-								game_model.backgrounds[0].tween = new Kinetic.Tween({
-									node: game_model.backgrounds[0],
-									//x: -170,
-									//y: -315,
-									//scaleX: 0.5,
-									//scaleY: 0.5,
-									opacity:1,
-									easing: Kinetic.Easings.EaseInOut,
-									duration: 7
+											});
+											game_model.backgrounds[1].tween.play();
+											currentMood = 1;
+										}
+										if(health < 0.5 && currentMood == 1) {
+											game_model.backgrounds[0].tween = new Kinetic.Tween({
+												node: game_model.backgrounds[0],
+												//x: -170,
+												//y: -315,
+												//scaleX: 0.5,
+												//scaleY: 0.5,
+												opacity:1,
+												easing: Kinetic.Easings.EaseInOut,
+												duration: 7
 
-								});
-								game_model.backgrounds[0].tween.play();
-								currentMood = 0;
-									}
-								currentMood = 1;
+											});
+											game_model.backgrounds[0].tween.play();
+											currentMood = 0;
+										}
 										if(health < 0) {
 											health = 0.5;
 											lives -= 1;
@@ -517,44 +527,44 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 												health = 0;
 												game_model.myLivesText.text('Game Over');
 												/*game_model.mySurfText.tween = Kinetic.Tween({
-													node: game_model.mySurfText,
-													x: game_model.width,
-													y: game_model.height,
-													easing: Kinetic.Easings.EaseOut,
-													duration: 3
-												});
-												game_model.mySurfText.tween.play();*/
-						game_model.myHB.setVisible(false);
-						game_model.myHBFill.setVisible(false);
-						game_model.myHBText.setVisible(false);
+												  node: game_model.mySurfText,
+												  x: game_model.width,
+												  y: game_model.height,
+												  easing: Kinetic.Easings.EaseOut,
+												  duration: 3
+												  });
+												  game_model.mySurfText.tween.play();*/
+												game_model.myHB.setVisible(false);
+												game_model.myHBFill.setVisible(false);
+												game_model.myHBText.setVisible(false);
 
-						game_model.mySurfText.setX(game_model.width/2 - 80);
-						game_model.mySurfText.setY(200);
-						game_model.myLivesText.setX(game_model.width/2 - 120);
-						game_model.myLivesText.setY(150);
-						game_model.myLivesText.setVisible(true);
-						for(var i = 0; i < 3; i++) {
-							game_model.liveImgs[i].setVisible(false);
-						}
+												game_model.mySurfText.setX(game_model.width/2 - 80);
+												game_model.mySurfText.setY(200);
+												game_model.myLivesText.setX(game_model.width/2 - 120);
+												game_model.myLivesText.setY(150);
+												game_model.myLivesText.setVisible(true);
+												for(var i = 0; i < 3; i++) {
+													game_model.liveImgs[i].setVisible(false);
+												}
 
-						game_view.bglayer.draw();
-
+												game_view.bglayer.draw();
+												bgMusic.stop();
 												endGameState = true;
 											}
 										}
 									}
 								}
 
-									if(collisionState === true) {
-										collisionTimer -= 1;
-										if(collisionTimer <= 0) {
-											collisionState = false;
-											collisionTimer = 90;
-										}
-										console.log(collisionState);
+								if(collisionState === true) {
+									collisionTimer -= 1;
+									if(collisionTimer <= 0) {
+										collisionState = false;
+										collisionTimer = 90;
 									}
+									console.log(collisionState);
 								}
 							}
+						}
 					} else if(state === gameOverState) {
 						surfEnable = false;
 						keyStates.forEach(function(value) {
