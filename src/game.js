@@ -232,7 +232,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 						hzPoints = [];
 						for(var j = 0; j < game_model.myLineModel.length; j++) {
-							if( j === game_model.currentLine) {
+							if( j === game_model.currentLine && betweenLines === false) {
 								game_model.myLine[j].stroke('red');
 							} else {
 								game_model.myLine[j].stroke('white');
