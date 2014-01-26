@@ -85,6 +85,12 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			    volume: 0.3,
 			});
 			
+			var crashSound = new Howl({
+				urls: ['web/sounds/crash.ogg'],
+			    loop: false,
+			    volume: 0.6,
+			});
+			
 				bgMusic = new Howl({
 					urls: ['web/sounds/fgj2014_running.ogg'],
 					loop: true,
@@ -119,6 +125,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						surfEnable = true;
 						surfTimer = 0;
 						endGameState = false;
+						collisionState = false;
 						x = 0;
 						lives = 3;
 						moveTimer = 30;
@@ -411,10 +418,10 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						}
 						if(game_model.myLineModel[0].getPoint(190) !== null && obstacle[0] === undefined)
 						{
-							obstacle[0] = new ObstacleModel(game_model.sprites[5], game_model.myLineModel[0], -1,100);
-							obstacle[1] = new ObstacleModel(game_model.sprites[6], game_model.myLineModel[1], -1,100);
-							obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[2], -1,100);
-							obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[3], -1,100);
+							obstacle[0] = new ObstacleModel(game_model.sprites[5], game_model.myLineModel[0], -1,10);
+							obstacle[1] = new ObstacleModel(game_model.sprites[6], game_model.myLineModel[1], -1,10);
+							obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[2], -1,10);
+							obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[3], -1,10);
 						}
 						for(var j=0;j<numObstacles;j++) {
 							if(obstacle[j] !== undefined) {
@@ -431,6 +438,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								if(oPos < selectPoint+4 && oPos > selectPoint-2 && curObstacleLine[j] === game_model.currentLine && collisionState === false && betweenLines === false) {
 									console.log("Collision in line "+curObstacleLine[j].toString());
 									if(collisionState === false) {
+										crashSound.play();
 										collisionState = true;
 										health = health-0.1;
 										if(health < 0) {
@@ -488,6 +496,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							}
 					} else if(state === gameOverState) {
 						surfEnable = false;
+						game_model.spriteSheet.setVisible(false);
 						keyStates.forEach(function(value) {
 							if(value) {
 								state=initState;
