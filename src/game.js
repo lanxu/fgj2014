@@ -71,8 +71,9 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var gameOverState = 1;
 			var inGameState = 2;
 			var goinState = 3;
-			var changeLevelState = 4; 
-			var state = startGameState;
+			var changeLevelState = 4;
+			var initState = 5;
+			var state = initState;
 			var healthUpTimer = 150;
 
 			game_view.layer.on('mousemove', function() {
