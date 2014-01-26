@@ -107,7 +107,9 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 				    './web/images/obstacle1.png',
 				    './web/images/obstacle1.png',
 				    './web/images/planet1.png', // 9
-				    './web/images/sprite.png'
+				    './web/images/sprite.png',
+				    './web/images/space-1.jpg',
+				    './web/images/space-2.jpg'
 
 				    );
 		    loadImages(sources,
@@ -117,6 +119,12 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 					    this.backgrounds[0] = this.sprites[4];
 					    this.backgrounds[0].setX(0);
 					    this.backgrounds[0].setY(0);
+					    this.backgrounds[1] = this.sprites[11];
+					    this.backgrounds[1].setX(-600);
+					    this.backgrounds[1].setY(-200);
+					    this.backgrounds[2] = this.sprites[12];
+					    this.backgrounds[2].setX(-200);
+					    this.backgrounds[2].setY(0);
 					    this.myImg = this.sprites[0];
 					    this.sprites[2].setX(10);
 					    this.sprites[2].setY(10);
@@ -291,11 +299,11 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 						    ],
 						    jump: [
 						    // x, y, width, height (3 frames)
-						    0,129,127,127,
+						    0,130,125,125,
 						    129,129,127,127,
 						    ],
 						    hit: [
-						    0,257,127,127,
+						    0,258,110,110,
 						    ]
 						    },
 						    frameRate: 7,

@@ -80,6 +80,8 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					    console.log(this);
 
 				
+					this.bglayer.add(this.model.backgrounds[2]);
+					this.bglayer.add(this.model.backgrounds[1]);
 					this.bglayer.add(this.model.backgrounds[0]);
 					//this.bglayer.add(this.model.sprites[2]);
 					//this.bglayer.add(this.model.sprites[1]);
@@ -93,7 +95,7 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					this.model.sprites[9].setX(this.model.width/2-150);
 					this.model.sprites[9].setY(this.model.height/2+150);
 
-					this.bglayer.add(this.model.sprites[9]);
+					this.layer.add(this.model.sprites[9]);
 
 					    for(var i = 0; i < 100; i++) {
 						    this.layer.add(this.model.stars[i]);
