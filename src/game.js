@@ -99,7 +99,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 					volume: 0.3,
 				});
 
-			bgMusic = new Howl(
+			
 			var surfTimer = 0;
 			var surfEnable = false;
 			var betweenLines = false;
