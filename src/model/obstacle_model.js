@@ -30,7 +30,12 @@ define(['config','backbone','kinetic'], function (Config, Backbone, Kinetic) {
 			}
 		}
 		that.updatePosition = updatePosition;
-		
+		var clear = function() {
+			accPos = 0;
+			curLinePoint = 0;
+
+		}
+		that.clear = clear;
 		return that;
 	}
 	return ObstacleModel;

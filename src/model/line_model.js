@@ -49,6 +49,11 @@ define(['config','backbone','kinetic'], function (Config, Backbone, Kinetic) {
 			}
 		}
 		that.getPointAngle = getPointAngle;
+		var clear = function() {
+			points = [];
+			pointAngles = [];
+		}
+		that.clear = clear;
 		return that;
 	}
 	return LineModel;
