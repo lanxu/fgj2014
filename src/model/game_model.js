@@ -5,11 +5,11 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 	    myImg: null,
 	    myLineModel: [],
 	    myLine: [],
-			myHB: null,
-			myHBFill : null,
-			myHBText : null,
+	    myHB: null,
+	    myHBFill : null,
+	    myHBText : null,
 	    myHzLine: null,
-			myLivesText: null,
+	    myLivesText: null,
 	    currentLine: 0,
 	    // Galaxy SII resolution
 	    width: 800,
@@ -17,6 +17,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 	    imageObj: null,
 	    sprites: [],
 	    backgrounds: [],
+	    liveImgs: [],
 	    lives: 3,
 	    livesText: null,
 	    starsPosition: [],
@@ -24,7 +25,9 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 	    stars: [],
 	    particles: [],
 	    spriteSheet: null,
-
+	    title: null,
+	    title_extreme: null,
+	    startText: null,
 	    initialize: function() {
 		    for(var i = 0; i < 100; i++) {
 			    this.starsPosition.splice(-1, 0, 
@@ -121,6 +124,39 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 					    this.sprites[1].setScaleX(0.5);
 					    this.sprites[1].setScaleY(0.5);
 
+
+					    this.liveImgs[0] = new Kinetic.Image({
+						    //your config and source here
+						    x: 10,
+						    y: 10,
+						    scaleX: 0.5,
+						    scaleY: 0.5,
+						    image: this.sprites[1].attrs.image,
+						    draggable: false,
+					    });
+					    this.liveImgs[1] = new Kinetic.Image({
+						    //your config and source here
+						    x: 70,
+						    y: 10,
+						    scaleX: 0.5,
+						    scaleY: 0.5,
+						    image: this.sprites[1].attrs.image,
+						    draggable: false,
+					    });
+					    this.liveImgs[2] = new Kinetic.Image({
+						    //your config and source here
+						    x: 130,
+						    y: 10,
+						    scaleX: 0.5,
+						    scaleY: 0.5,
+						    image: this.sprites[1].attrs.image,
+						    draggable: false,
+					    });
+
+
+					    //this.sprites[1];
+
+
 					    var redLine = new Kinetic.Line({
 						    points: [],
 						stroke: 'white',
@@ -176,41 +212,53 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 					    lineModel[1] = new LineModel(this.width,this.height);
 					    lineModel[2] = new LineModel(this.width,this.height);
 					    lineModel[3] = new LineModel(this.width,this.height);
-							
-							var hb = new Kinetic.Rect({
-								width: 150,
-								height: 15,
-								x: 5,
-								y: 60,
-								fill: 'black',
-								stroke: 'white',
-								strokeWidth: 3
-							});
-							
-							var hbFill = new Kinetic.Rect({
-								width: 144,
-								height: 9,
-								x: 8,
-								y: 63,
-								fill: 'red',
-								stroke: 'white',
-								strokeWidth: 0
-							});
-							
-							var moodText = new Kinetic.Text({
-						    x: 20,
-						    y: 80,
-						    text: "Mood meter",
-						    fontSize: 24,
-						    fontFamily: 'Fullkorn',
-						    fontStyle: 'bold',
-						    align: 'left',
-						    fill: 'white'
+
+					    var hb = new Kinetic.Rect({
+						    width: 150,
+						height: 15,
+						x: 5,
+						y: 60,
+						fill: 'black',
+						stroke: 'white',
+						strokeWidth: 3
 					    });
-							this.myLivesText = this.livesText;
-							this.myHB = hb;
-							this.myHBFill = hbFill;
-							this.myHBText = moodText;
+
+					    var hbFill = new Kinetic.Rect({
+						    width: 144,
+						height: 9,
+						x: 8,
+						y: 63,
+						fill: 'red',
+						stroke: 'white',
+						strokeWidth: 0
+					    });
+
+					    var startText = new Kinetic.Text({
+						x: this.width/2-360,
+						y: 360,
+						text: "PRESS ANY KEY TO START",
+						fontSize: 48,
+						fontFamily: 'Fullkorn',
+						fontStyle: 'bold',
+						align: 'right',
+						fill: 'white'
+					    });
+
+					    var moodText = new Kinetic.Text({
+						    x: 20,
+						y: 80,
+						text: "Mood meter",
+						fontSize: 24,
+						fontFamily: 'Fullkorn',
+						fontStyle: 'bold',
+						align: 'left',
+						fill: 'white'
+					    });
+					    this.startText = startText;
+					    this.myLivesText = this.livesText;
+					    this.myHB = hb;
+					    this.myHBFill = hbFill;
+					    this.myHBText = moodText;
 					    this.myLine[0] = redLine;
 					    this.myLine[1] = greenLine;
 					    this.myLine[2] = blackLine;
@@ -235,13 +283,32 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 						    129,129,127,127,
 						    ],
 						    hit: [
-							0,257,127,127,
+						    0,257,127,127,
 						    ]
 						    },
 						    frameRate: 7,
 						    frameIndex: 0,
 						    offset: {x:64, y:64}
 					    });
+					    this.title = this.sprites[2];
+					    this.title_extreme = this.sprites[3];
+
+					    this.title.setX(this.width/2-200);
+					    this.title_extreme.setY(this.height/2);
+					    this.title_extreme.setX(this.width/2-200);
+					    this.title_extreme.scaleX(0.7);
+					    this.title_extreme.scaleY(0.7);
+
+					    this.spriteSheet.setX(-200);
+					    this.sprites[5].setX(-200);
+					    this.sprites[6].setX(-200);
+					    this.sprites[7].setX(-200);
+					    this.sprites[8].setX(-200);
+					    this.myHB.setVisible(false);
+					    this.myHBFill.setVisible(false);
+					    this.myHBText.setVisible(false);
+					    this.myLivesText.setVisible(false);
+
 					    //this.spriteSheet.start();
 					    callback();
 
