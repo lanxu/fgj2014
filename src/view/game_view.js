@@ -116,6 +116,8 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					this.layer.add(this.model.title);
 					this.layer.add(this.model.title_extreme);
 					this.layer.add(this.model.startText);
+					this.layer.add(this.model.mySurfText);
+					
 					
 					//this.layer.draw();
 					this.stage.add(this.bglayer);

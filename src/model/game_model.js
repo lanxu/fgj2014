@@ -10,6 +10,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 	    myHBText : null,
 	    myHzLine: null,
 	    myLivesText: null,
+			mySurfText: null,
 	    currentLine: 0,
 	    // Galaxy SII resolution
 	    width: 800,
@@ -206,6 +207,17 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 						    align: 'left',
 						    fill: 'white'
 					    });
+							
+						var surfText = new Kinetic.Text({
+							x: 500,
+							y: 10,
+							text: '',
+							fontSize: 24,
+							fontFamily: 'Fullkorn',
+							fontStyle: 'bold',
+							align: 'left',
+							fill: 'white'
+						});
 
 					    var lineModel = [];
 					    lineModel[0] = new LineModel(this.width,this.height);
@@ -265,7 +277,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 					    this.myLine[3] = blueLine;
 					    this.myHzLine = hzLine;
 					    this.myLineModel = lineModel;
-
+							this.mySurfText = surfText;
 					    this.spriteSheet = new Kinetic.Sprite({
 						    x: 250,
 						    y: 40,

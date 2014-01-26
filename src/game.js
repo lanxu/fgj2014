@@ -80,7 +80,12 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 				loop: false,
 				volume: 0.5,
 			});
-
+			
+			
+			var surfTimer = 0;
+			var surfEnable = false;
+			var betweenLines = false;
+			var betweenLinesCounter = 20;
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
 			});
@@ -104,6 +109,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 					    game_model.title.setVisible(true);
 					    game_model.title_extreme.setVisible(true);
 					    game_model.startText.setVisible(true);
+							game_model.mySurfText.setVisible(false);
 					for(var i = 0; i < 3; i++) {
 						game_model.liveImgs[i].setVisible(false);
 					}
@@ -122,6 +128,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 					    game_model.title.setVisible(false);
 					    game_model.title_extreme.setVisible(false);
 					    game_model.startText.setVisible(false);
+							game_model.mySurfText.setVisible(true);
 					for(var i = 0; i < 3; i++) {
 						game_model.liveImgs[i].setVisible(true);
 					}
@@ -143,15 +150,29 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 					
 					} else if(state === inGameState) {
 					
+					if(betweenLines === true) {
+						betweenLinesCounter--;
+						if(betweenLinesCounter <= 0) {
+							betweenLines = false;
+							betweenLinesCounter = 20;
+						}
+					}
+					surfEnable = true;
+					
 					healthUpTimer -= 1;
 					
 					if(healthUpTimer <= 0) {
-						health += 0.02;
+						health += 0.05;
 						if(health > 1) {
 							health = 1;
 						}
 						healthUpTimer = 150;
 					}
+					
+					if(surfEnable === true) {
+						surfTimer += 1;
+					}
+					game_model.mySurfText.text('Surf Time: ' + Math.floor(surfTimer/30) + ' s');
 					
 					// Update health
 					game_model.myHBFill.width(health*144);
@@ -249,6 +270,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
 									movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 								}
+								betweenLines = true;
 								bounceSound.play();
 							}
 						}
@@ -274,6 +296,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
 									movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 								}
+								betweenLines = true;
 								bounceSound.play();
 
 							}
@@ -326,7 +349,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 							oPos = obstacle[j].getCurrentPoint();
 
-							if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine && collisionState === false) {
+							if(oPos < selectPoint+4 && oPos > selectPoint-2 && curObstacleLine[j] === game_model.currentLine && collisionState === false && betweenLines === false) {
 								console.log("Collision in line "+curObstacleLine[j].toString());
 								if(collisionState === false) {
 									collisionState = true;
@@ -357,7 +380,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 	
 					} else if(state === gameOverState) {
-					
+						surfEnable = false;
 					} else {
 					
 					}
