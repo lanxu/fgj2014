@@ -71,9 +71,9 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var gameOverState = 1;
 			var inGameState = 2;
 			var goinState = 3;
-			var changeLevelState = 4;
-			var initState = 5;
-			var state = initState;
+			var changeLevelState = 4; 
+			var state = startGameState;
+			var healthUpTimer = 150;
 
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
@@ -137,6 +137,16 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 					
 					} else if(state === inGameState) {
 					
+					healthUpTimer -= 1;
+					
+					if(healthUpTimer <= 0) {
+						health += 0.02;
+						if(health > 1) {
+							health = 1;
+						}
+						healthUpTimer = 150;
+					}
+					
 					// Update health
 					game_model.myHBFill.width(health*144);
 					
@@ -158,7 +168,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							game_model.myLine[j].stroke('white');
 						
 						}
-						game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin(x*(Math.PI/180))+2.5);
+						game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin((x+j*80)*(Math.PI/180))+2.5);
 						//console.log(game_model.myLineModel[j].getPoints());
 
 						game_model.myLine[j].attrs.points = game_model.myLineModel[j].getPoints();
