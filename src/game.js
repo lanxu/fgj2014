@@ -169,7 +169,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						healthUpTimer = 150;
 					}
 					
-					if(surfEnable === true) {
+					if(surfEnable === true && endGameState === false) {
 						surfTimer += 1;
 					}
 					game_model.mySurfText.text('Surf Time: ' + Math.floor(surfTimer/30) + ' s');
