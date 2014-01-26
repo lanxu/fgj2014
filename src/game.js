@@ -163,6 +163,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 					game_model.sprites[9].scaleY(1);
 					game_model.sprites[9].setX(game_model.width/2-75);
 					game_model.sprites[9].setY(game_model.height/2+75);
+					bgScale = 1;
 						game_view.bglayer.draw();
 						state = startGameState;
 
