@@ -74,6 +74,11 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var changeLevelState = 4; 
 			var state = startGameState;
 			var healthUpTimer = 150;
+			var bounceSound = new Howl({
+				urls: ['web/sounds/bounce.wav'],
+				loop: false,
+				volume: 0.5,
+			});
 
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
@@ -204,7 +209,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
 									movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 								}
-
+								bounceSound.play();
 							}
 						}
 						if(keyStates[38] === true) {
@@ -229,6 +234,8 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
 									movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 								}
+								bounceSound.play();
+
 							}
 						}
 						if(keyStates[40] === true) {
