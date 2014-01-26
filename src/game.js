@@ -74,6 +74,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var initState = 5;
 			var state = initState;
 			var healthUpTimer = 150;
+			var currentMood = 1;
 			var bounceSound = new Howl({
 				urls: ['web/sounds/bounce.wav'],
 			    loop: false,
@@ -178,7 +179,19 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 								});
 								game_model.spriteSheet.tween.play();
+								game_model.backgrounds[0].tween = new Kinetic.Tween({
+									node: game_model.backgrounds[0],
+									//x: -170,
+									//y: -315,
+									//scaleX: 0.5,
+									//scaleY: 0.5,
+									opacity:0,
+									easing: Kinetic.Easings.EaseInOut,
+									duration: 7
 
+								});
+								game_model.backgrounds[0].tween.play();
+								currentMood = 1;
 								state = goinState;
 								windupSound.play();
 							}
@@ -236,6 +249,40 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								health = 1;
 							}
 							healthUpTimer = 150;
+							if(health >= 0.5 && currentMood == 0) {
+							
+								game_model.backgrounds[0].tween = new Kinetic.Tween({
+									node: game_model.backgrounds[0],
+									//x: -170,
+									//y: -315,
+									//scaleX: 0.5,
+									//scaleY: 0.5,
+									opacity:0,
+									easing: Kinetic.Easings.EaseInOut,
+									duration: 7
+
+								});
+								game_model.backgrounds[0].tween.play();
+								currentMood = 1;
+							}
+							if(health >= 0.75 && currentMood == 1) {
+							
+								game_model.backgrounds[1].tween = new Kinetic.Tween({
+									node: game_model.backgrounds[1],
+									//x: -170,
+									//y: -315,
+									//scaleX: 0.5,
+									//scaleY: 0.5,
+									opacity:0,
+									easing: Kinetic.Easings.EaseInOut,
+									duration: 7
+
+								});
+								game_model.backgrounds[1].tween.play();
+								currentMood = 2;
+							}
+
+							
 						}
 
 						if(surfEnable === true && endGameState === false) {
@@ -246,14 +293,16 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						// Update health
 						game_model.myHBFill.width(health*144);
 
-						if(x % 10 == 0)	 {
-							bgScale+=0.01;
+							bgScale+=0.001;
 							game_model.sprites[9].setScaleX(bgScale);
 							game_model.sprites[9].setScaleY(bgScale);
-							game_model.sprites[9].setY(game_model.sprites[9].getY()-1*bgScale);
+							game_model.sprites[9].setY(game_model.sprites[9].getY()-0.1*bgScale);
 							game_model.sprites[9].setX(game_model.width/2-75*bgScale);
-							game_view.bglayer.draw();
-						}
+							//game_view.bglayer.draw();
+/*							for(var h = 0; h < 3; h++) {
+								game_model.backgrounds[h].setX(-0.1*bgScale);
+								game_view.bglayer.draw();
+								}*/
 
 						hzPoints = [];
 						for(var j = 0; j < game_model.myLineModel.length; j++) {
@@ -421,7 +470,38 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									console.log("Collision in line "+curObstacleLine[j].toString());
 									if(collisionState === false) {
 										collisionState = true;
-										health = health-1.1;
+										health = health-0.2;
+								if(health < 0.75 && currentMood == 2) {
+								game_model.backgrounds[1].tween = new Kinetic.Tween({
+									node: game_model.backgrounds[1],
+									//x: -170,
+									//y: -315,
+									//scaleX: 0.5,
+									//scaleY: 0.5,
+									opacity:1,
+									easing: Kinetic.Easings.EaseInOut,
+									duration: 7
+
+								});
+								game_model.backgrounds[1].tween.play();
+								currentMood = 1;
+									}
+								if(health < 0.5 && currentMood == 1) {
+								game_model.backgrounds[0].tween = new Kinetic.Tween({
+									node: game_model.backgrounds[0],
+									//x: -170,
+									//y: -315,
+									//scaleX: 0.5,
+									//scaleY: 0.5,
+									opacity:1,
+									easing: Kinetic.Easings.EaseInOut,
+									duration: 7
+
+								});
+								game_model.backgrounds[0].tween.play();
+								currentMood = 0;
+									}
+								currentMood = 1;
 										if(health < 0) {
 											health = 0.5;
 											lives -= 1;
