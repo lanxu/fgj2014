@@ -61,6 +61,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var bgMusicState = false;
 			var bgMusic = null;
 
+			var allup = false;
 			var lives = 3;
 			var bgScale = 1;
 			var endGameState = false;
@@ -150,13 +151,17 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						game_model.sprites[6].setX(-200);
 						game_model.sprites[7].setX(-200);
 						game_model.sprites[8].setX(-200);
+						game_model.sprites[9].scaleX(1);
+					game_model.sprites[9].scaleY(1);
+					game_model.sprites[9].setX(game_model.width/2-75);
+					game_model.sprites[9].setY(game_model.height/2+75);
 						game_view.bglayer.draw();
 						state = startGameState;
 
 					} else if(state === startGameState) {
 						// initialize
 						keyStates.forEach(function(value) {
-							if(value) {
+							if(value && allup) {
 								game_model.myHB.setVisible(true);
 								game_model.myHBFill.setVisible(true);
 								game_model.myHBText.setVisible(true);
@@ -210,9 +215,14 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							}
 
 						});		
-
 						//state = inGameState;
 
+						allup = true;
+						keyStates.forEach(function(value) {
+							if(value) {
+								allup = false;
+							}
+						});
 
 
 					} else if(state === goinState) {

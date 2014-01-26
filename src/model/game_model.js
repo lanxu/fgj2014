@@ -299,11 +299,11 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 						    ],
 						    jump: [
 						    // x, y, width, height (3 frames)
-						    0,129,127,127,
+						    0,130,125,125,
 						    129,129,127,127,
 						    ],
 						    hit: [
-						    0,257,127,127,
+						    0,258,110,110,
 						    ]
 						    },
 						    frameRate: 7,
