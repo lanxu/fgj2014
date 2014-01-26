@@ -71,8 +71,9 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var gameOverState = 1;
 			var inGameState = 2;
 			var goinState = 3;
-			var changeLevelState = 4; 
-			var state = startGameState;
+			var changeLevelState = 4;
+			var initState = 5;
+			var state = initState;
 
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
@@ -88,11 +89,50 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 				var numUpdates = Math.floor((frame.timeDiff + leftover) / FPS);
 				for(var i = 0; i < numUpdates; i++) {
-
-					if(state === startGameState) {
-						// initialize
+					if(state === initState) {
 						health = 0.5;
-						state = inGameState;
+					    game_model.myHB.setVisible(false);
+					    game_model.myHBFill.setVisible(false);
+					    game_model.myHBText.setVisible(false);
+					    game_model.myLivesText.setVisible(false);
+					    game_model.title.setVisible(true);
+					    game_model.title_extreme.setVisible(true);
+					    game_model.startText.setVisible(true);
+					for(var i = 0; i < 3; i++) {
+						game_model.liveImgs[i].setVisible(false);
+					}
+					
+					game_view.bglayer.draw();
+						state = startGameState;
+				
+					} else if(state === startGameState) {
+						// initialize
+						keyStates.forEach(function(value) {
+							if(value) {
+					    game_model.myHB.setVisible(true);
+					    game_model.myHBFill.setVisible(true);
+					    game_model.myHBText.setVisible(true);
+					    game_model.myLivesText.setVisible(false);
+					    game_model.title.setVisible(false);
+					    game_model.title_extreme.setVisible(false);
+					    game_model.startText.setVisible(false);
+					for(var i = 0; i < 3; i++) {
+						game_model.liveImgs[i].setVisible(true);
+					}
+					
+					game_view.bglayer.draw();
+
+
+
+								state = inGameState;
+							}
+						
+						});		
+						
+						//state = inGameState;
+						
+
+
 					} else if(state === goinState) {
 					
 					} else if(state === inGameState) {

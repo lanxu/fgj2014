@@ -82,7 +82,11 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 				
 					this.bglayer.add(this.model.backgrounds[0]);
 					//this.bglayer.add(this.model.sprites[2]);
-					this.bglayer.add(this.model.sprites[1]);
+					//this.bglayer.add(this.model.sprites[1]);
+
+					for(var i = 0; i < 3; i++) {
+						this.bglayer.add(this.model.liveImgs[i]);
+					}
 
 					this.model.sprites[9].scaleX(2);
 					this.model.sprites[9].scaleY(2);
@@ -109,6 +113,9 @@ define(['config', 'backbone', 'kinetic','jquery'], function (Config, Backbone, K
 					this.layer.add(this.model.myHB);
 					this.layer.add(this.model.myHBFill);
 					this.layer.add(this.model.myHBText);
+					this.layer.add(this.model.title);
+					this.layer.add(this.model.title_extreme);
+					this.layer.add(this.model.startText);
 					
 					//this.layer.draw();
 					this.stage.add(this.bglayer);
