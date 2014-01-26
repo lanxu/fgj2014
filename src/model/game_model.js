@@ -236,7 +236,7 @@ define(['config','backbone','kinetic', 'linemodel','obstaclemodel'], function (C
 					    });
 
 					    var hbFill = new Kinetic.Rect({
-						    width: 144,
+						    width: 72,
 						height: 9,
 						x: 8,
 						y: 63,

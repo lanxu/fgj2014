@@ -61,7 +61,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var bgMusicState = false;
 			var bgMusic = null;
 
-			var lives = 1;
+			var lives = 3;
 			var bgScale = 1;
 			var endGameState = false;
 
@@ -79,6 +79,12 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			    loop: false,
 			    volume: 0.5,
 			});
+			var windupSound = new Howl({
+				urls: ['web/sounds/windup.ogg'],
+			    loop: false,
+			    volume: 0.3,
+			});
+			
 
 
 			var surfTimer = 0;
@@ -157,6 +163,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								game_model.spriteSheet.tween.play();
 
 								state = goinState;
+								windupSound.play();
 							}
 
 						});		
@@ -183,13 +190,15 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 							  hzPoints.push(curPoint[0]);
 							  hzPoints.push(curPoint[1]);
 							  }*/
-
+							
 						}
+						
 						x++;
 						if(x > 200) {
 							state = inGameState;
+							windupSound.stop();
 						}
-
+						
 
 
 					} else if(state === inGameState) {
@@ -205,7 +214,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 						healthUpTimer -= 1;
 
-						if(healthUpTimer <= 0) {
+						if(healthUpTimer <= 0 && endGameState === false) {
 							health += 0.05;
 							if(health > 1) {
 								health = 1;
@@ -274,7 +283,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 										bgMusic = new Howl({
 											urls: ['web/sounds/fgj2014_running.ogg'],
 											loop: true,
-											volume: 0.5,
+											volume: 0.3,
 										}).play();
 										bgMusicState = true;
 									}
@@ -400,7 +409,14 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 										if(health < 0) {
 											health = 0.5;
 											lives -= 1;
-											game_model.myLivesText.text(''+lives);
+											for(var k=0;k<3;k++) {
+												if(k < lives) {
+													game_model.liveImgs[k].setVisible(true);
+												}  else {
+													game_model.liveImgs[k].setVisible(false);
+												}
+												game_view.bglayer.draw();
+											}
 											if(lives <= 0) {
 												health = 0;
 												game_model.myLivesText.text('Game Over');
