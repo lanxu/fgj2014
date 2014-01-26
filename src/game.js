@@ -85,12 +85,18 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			    volume: 0.3,
 			});
 			
-
+				bgMusic = new Howl({
+					urls: ['web/sounds/fgj2014_running.ogg'],
+					loop: true,
+					volume: 0.3,
+				});
 
 			var surfTimer = 0;
 			var surfEnable = false;
 			var betweenLines = false;
 			var betweenLinesCounter = 20;
+			var moveTimer = 30;
+			
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
 			});
@@ -107,11 +113,15 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 				for(var i = 0; i < numUpdates; i++) {
 					if(state === initState) {
 						health = 0.5;
+							// Update health
+						game_model.myHBFill.width(health*144);
 						game_model.myHB.setVisible(false);
 						surfEnable = true;
 						surfTimer = 0;
 						endGameState = false;
-						x = 0;	
+						x = 0;
+						lives = 3;
+						moveTimer = 30;
 						game_model.myHBFill.setVisible(false);
 						game_model.myHBText.setVisible(false);
 						game_model.myLivesText.setVisible(false);
@@ -119,6 +129,9 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						game_model.title_extreme.setVisible(true);
 						game_model.startText.setVisible(true);
 						game_model.mySurfText.setVisible(false);
+						game_model.mySurfText.setX(500);
+						game_model.mySurfText.setY(10);
+						game_model.mySurfText.text('Surf Time: ' + Math.floor(surfTimer/30) + ' s');
 						for(var i = 0; i < 3; i++) {
 							game_model.liveImgs[i].setVisible(false);
 						}
@@ -214,12 +227,15 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						if(x > 200) {
 							state = inGameState;
 							windupSound.stop();
+							bgMusic.play();
 						}
 						
 
 
 					} else if(state === inGameState) {
-
+						
+						
+						
 						if(betweenLines === true) {
 							betweenLinesCounter--;
 							if(betweenLinesCounter <= 0) {
@@ -295,14 +311,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								}
 								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(selectPoint);
 								if(imgPoint !== null) {
-									if(bgMusicState === false) {
-										bgMusic = new Howl({
-											urls: ['web/sounds/fgj2014_running.ogg'],
-											loop: true,
-											volume: 0.3,
-										}).play();
-										bgMusicState = true;
-									}
+									
 									var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
 									var rotation_angle = -game_model.myLineModel[game_model.currentLine].getPointDiffAngle(selectPoint)*(180/Math.PI)*0.5;
 									if(game_model.currentLine > 1) {
@@ -392,10 +401,12 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 							game_model.spriteSheet.setX( game_model.spriteSheet.getX()+playerspeedx);
 							game_model.spriteSheet.setY( game_model.spriteSheet.getY()+playerspeedy);
-							if( Math.abs(game_model.spriteSheet.getX() - targetx) <= 10 &&
-									Math.abs(game_model.spriteSheet.getY() - targety) <= 10) {
+							if( moveTimer <= 0) {
 										moving = false;
-									}
+										moveTimer = 30;
+							} else {
+								moveTimer -= 1;
+							}
 
 						}
 						if(game_model.myLineModel[0].getPoint(190) !== null && obstacle[0] === undefined)
@@ -421,7 +432,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									console.log("Collision in line "+curObstacleLine[j].toString());
 									if(collisionState === false) {
 										collisionState = true;
-										health = health-1.1;
+										health = health-0.1;
 										if(health < 0) {
 											health = 0.5;
 											lives -= 1;
@@ -458,7 +469,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						}
 
 						game_view.bglayer.draw();
-
+												bgMusic.stop();
 												endGameState = true;
 											}
 										}
