@@ -74,7 +74,17 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var initState = 5;
 			var state = initState;
 			var healthUpTimer = 150;
+			var bounceSound = new Howl({
+				urls: ['web/sounds/bounce.wav'],
+			    loop: false,
+			    volume: 0.5,
+			});
 
+
+			var surfTimer = 0;
+			var surfEnable = false;
+			var betweenLines = false;
+			var betweenLinesCounter = 20;
 			game_view.layer.on('mousemove', function() {
 				console.log('move');
 			});
@@ -98,6 +108,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 						game_model.title.setVisible(true);
 						game_model.title_extreme.setVisible(true);
 						game_model.startText.setVisible(true);
+						game_model.mySurfText.setVisible(false);
 						for(var i = 0; i < 3; i++) {
 							game_model.liveImgs[i].setVisible(false);
 						}
@@ -116,6 +127,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								game_model.title.setVisible(false);
 								game_model.title_extreme.setVisible(false);
 								game_model.startText.setVisible(false);
+								game_model.mySurfText.setVisible(true);
 								for(var i = 0; i < 3; i++) {
 									game_model.liveImgs[i].setVisible(true);
 								}
@@ -133,8 +145,8 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								// Target
 
 								game_model.spriteSheet.tween = new Kinetic.Tween({
-								node: game_model.spriteSheet,
-								x: 170,
+									node: game_model.spriteSheet,
+									x: 170,
 									y: 315,
 									scaleX: 0.5,
 									scaleY: 0.5,
@@ -159,7 +171,6 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 								game_model.myLine[j].stroke('red');
 							} else {
 								game_model.myLine[j].stroke('white');
-
 							}
 							game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin((x+j*80)*(Math.PI/180))+2.5);
 							//console.log(game_model.myLineModel[j].getPoints());
@@ -168,30 +179,44 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 							game_model.myLineModel[j].movePoints();
 							/*curPoint = game_model.myLineModel[j].getPoint(selectPoint);
-							if(curPoint !== null) {
-								hzPoints.push(curPoint[0]);
-								hzPoints.push(curPoint[1]);
-							}*/
+							  if(curPoint !== null) {
+							  hzPoints.push(curPoint[0]);
+							  hzPoints.push(curPoint[1]);
+							  }*/
 
 						}
 						x++;
 						if(x > 200) {
 							state = inGameState;
 						}
-						
-						
+
+
 
 					} else if(state === inGameState) {
+
+						if(betweenLines === true) {
+							betweenLinesCounter--;
+							if(betweenLinesCounter <= 0) {
+								betweenLines = false;
+								betweenLinesCounter = 20;
+							}
+						}
+						surfEnable = true;
 
 						healthUpTimer -= 1;
 
 						if(healthUpTimer <= 0) {
-							health += 0.02;
+							health += 0.05;
 							if(health > 1) {
 								health = 1;
 							}
 							healthUpTimer = 150;
 						}
+
+						if(surfEnable === true) {
+							surfTimer += 1;
+						}
+						game_model.mySurfText.text('Surf Time: ' + Math.floor(surfTimer/30) + ' s');
 
 						// Update health
 						game_model.myHBFill.width(health*144);
@@ -267,6 +292,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 
 								}
+
 							}
 
 
@@ -288,6 +314,8 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 										movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
 										movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 									}
+									betweenLines = true;
+									bounceSound.play();
 
 								}
 							}
@@ -313,6 +341,8 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 										movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
 										movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 									}
+									betweenLines = true;
+									bounceSound.play();
 								}
 							}
 							if(keyStates[40] === true) {
@@ -362,7 +392,7 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 								oPos = obstacle[j].getCurrentPoint();
 
-								if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine && collisionState === false) {
+								if(oPos < selectPoint+4 && oPos > selectPoint-2 && curObstacleLine[j] === game_model.currentLine && collisionState === false && betweenLines === false) {
 									console.log("Collision in line "+curObstacleLine[j].toString());
 									if(collisionState === false) {
 										collisionState = true;
@@ -380,19 +410,18 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 									}
 								}
 
-								if(collisionState === true) {
-									collisionTimer -= 1;
-									if(collisionTimer <= 0) {
-										collisionState = false;
-										collisionTimer = 90;
+									if(collisionState === true) {
+										collisionTimer -= 1;
+										if(collisionTimer <= 0) {
+											collisionState = false;
+											collisionTimer = 90;
+										}
+										console.log(collisionState);
 									}
-									console.log(collisionState);
 								}
 							}
-						}
-
 					} else if(state === gameOverState) {
-
+						surfEnable = false;
 					} else {
 
 					}
