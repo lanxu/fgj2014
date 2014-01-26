@@ -61,7 +61,6 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 			var bgMusicState = false;
 			var bgMusic = null;
 
-
 			var lives = 1;
 			var bgScale = 1;
 			var endGameState = false;
@@ -92,269 +91,312 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 				for(var i = 0; i < numUpdates; i++) {
 					if(state === initState) {
 						health = 0.5;
-					    game_model.myHB.setVisible(false);
-					    game_model.myHBFill.setVisible(false);
-					    game_model.myHBText.setVisible(false);
-					    game_model.myLivesText.setVisible(false);
-					    game_model.title.setVisible(true);
-					    game_model.title_extreme.setVisible(true);
-					    game_model.startText.setVisible(true);
-					for(var i = 0; i < 3; i++) {
-						game_model.liveImgs[i].setVisible(false);
-					}
-					
-					game_view.bglayer.draw();
+						game_model.myHB.setVisible(false);
+						game_model.myHBFill.setVisible(false);
+						game_model.myHBText.setVisible(false);
+						game_model.myLivesText.setVisible(false);
+						game_model.title.setVisible(true);
+						game_model.title_extreme.setVisible(true);
+						game_model.startText.setVisible(true);
+						for(var i = 0; i < 3; i++) {
+							game_model.liveImgs[i].setVisible(false);
+						}
+
+						game_view.bglayer.draw();
 						state = startGameState;
-				
+
 					} else if(state === startGameState) {
 						// initialize
 						keyStates.forEach(function(value) {
 							if(value) {
-					    game_model.myHB.setVisible(true);
-					    game_model.myHBFill.setVisible(true);
-					    game_model.myHBText.setVisible(true);
-					    game_model.myLivesText.setVisible(false);
-					    game_model.title.setVisible(false);
-					    game_model.title_extreme.setVisible(false);
-					    game_model.startText.setVisible(false);
-					for(var i = 0; i < 3; i++) {
-						game_model.liveImgs[i].setVisible(true);
-					}
-					
-					game_view.bglayer.draw();
+								game_model.myHB.setVisible(true);
+								game_model.myHBFill.setVisible(true);
+								game_model.myHBText.setVisible(true);
+								game_model.myLivesText.setVisible(false);
+								game_model.title.setVisible(false);
+								game_model.title_extreme.setVisible(false);
+								game_model.startText.setVisible(false);
+								for(var i = 0; i < 3; i++) {
+									game_model.liveImgs[i].setVisible(true);
+								}
+
+								game_view.bglayer.draw();
+
+								game_model.spriteSheet.setX(game_model.width/2+100);	
+								game_model.spriteSheet.setY(-200);
+								game_model.spriteSheet.scaleY(3);
+								game_model.spriteSheet.scaleX(3);
+								game_model.spriteSheet.animation('jump');
+								game_model.spriteSheet.setVisible(true);
 
 
+								// Target
 
-								state = inGameState;
+								game_model.spriteSheet.tween = new Kinetic.Tween({
+								node: game_model.spriteSheet,
+								x: 170,
+									y: 315,
+									scaleX: 0.5,
+									scaleY: 0.5,
+									easing: Kinetic.Easings.EaseOut,
+									duration: 7
+
+								});
+								game_model.spriteSheet.tween.play();
+
+								state = goinState;
 							}
-						
+
 						});		
-						
+
 						//state = inGameState;
-						
+
 
 
 					} else if(state === goinState) {
-					
-					} else if(state === inGameState) {
-					
-					healthUpTimer -= 1;
-					
-					if(healthUpTimer <= 0) {
-						health += 0.02;
-						if(health > 1) {
-							health = 1;
-						}
-						healthUpTimer = 150;
-					}
-					
-					// Update health
-					game_model.myHBFill.width(health*144);
-					
-					x = x + 1;
-					if(x % 10 == 0)	 {
-						bgScale+=0.01;
-						game_model.sprites[9].setScaleX(bgScale);
-						game_model.sprites[9].setScaleY(bgScale);
-						game_model.sprites[9].setY(game_model.sprites[9].getY()-1*bgScale);
-						game_model.sprites[9].setX(game_model.width/2-75*bgScale);
-						game_view.bglayer.draw();
-					}
-
-					hzPoints = [];
-					for(var j = 0; j < game_model.myLineModel.length; j++) {
-						if( j === game_model.currentLine) {
-							game_model.myLine[j].stroke('red');
-						} else {
-							game_model.myLine[j].stroke('white');
-						
-						}
-						game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin((x+j*80)*(Math.PI/180))+2.5);
-						//console.log(game_model.myLineModel[j].getPoints());
-
-						game_model.myLine[j].attrs.points = game_model.myLineModel[j].getPoints();
-
-						game_model.myLineModel[j].movePoints();
-						curPoint = game_model.myLineModel[j].getPoint(selectPoint);
-						if(curPoint !== null) {
-							hzPoints.push(curPoint[0]);
-							hzPoints.push(curPoint[1]);
-						}
-					}
-					game_model.myHzLine.attrs.points = hzPoints;
-					// Logic
-					// Modify model -> see difference
-					x+=2;
-					
-					if(moving === false) {
-
-						game_model.spriteSheet.animation('idle');
-						if(game_model.myImg != null) {
-							//var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
-							if(endGameState === false) {
-								selectPoint = 120;
+						for(var j = 0; j < game_model.myLineModel.length; j++) {
+							if( j === game_model.currentLine) {
+								game_model.myLine[j].stroke('red');
 							} else {
-								selectPoint += 1;
-								if(selectPoint > 199) {
-									state = gameOverState;
-								}
+								game_model.myLine[j].stroke('white');
+
 							}
-							var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(selectPoint);
-							if(imgPoint !== null) {
-								if(bgMusicState === false) {
-									bgMusic = new Howl({
-										urls: ['web/sounds/fgj2014_running.ogg'],
-										loop: true,
-										volume: 0.5,
-									}).play();
-									bgMusicState = true;
-								}
-								var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
-								var rotation_angle = -game_model.myLineModel[game_model.currentLine].getPointDiffAngle(selectPoint)*(180/Math.PI)*0.5;
-								if(game_model.currentLine > 1) {
-									game_model.spriteSheet.scaleX(-scaling_factor);
+							game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin((x+j*80)*(Math.PI/180))+2.5);
+							//console.log(game_model.myLineModel[j].getPoints());
+
+							game_model.myLine[j].attrs.points = game_model.myLineModel[j].getPoints();
+
+							game_model.myLineModel[j].movePoints();
+							/*curPoint = game_model.myLineModel[j].getPoint(selectPoint);
+							if(curPoint !== null) {
+								hzPoints.push(curPoint[0]);
+								hzPoints.push(curPoint[1]);
+							}*/
+
+						}
+						x++;
+						if(x > 200) {
+							state = inGameState;
+						}
+						
+						
+
+					} else if(state === inGameState) {
+
+						healthUpTimer -= 1;
+
+						if(healthUpTimer <= 0) {
+							health += 0.02;
+							if(health > 1) {
+								health = 1;
+							}
+							healthUpTimer = 150;
+						}
+
+						// Update health
+						game_model.myHBFill.width(health*144);
+
+						if(x % 10 == 0)	 {
+							bgScale+=0.01;
+							game_model.sprites[9].setScaleX(bgScale);
+							game_model.sprites[9].setScaleY(bgScale);
+							game_model.sprites[9].setY(game_model.sprites[9].getY()-1*bgScale);
+							game_model.sprites[9].setX(game_model.width/2-75*bgScale);
+							game_view.bglayer.draw();
+						}
+
+						hzPoints = [];
+						for(var j = 0; j < game_model.myLineModel.length; j++) {
+							if( j === game_model.currentLine) {
+								game_model.myLine[j].stroke('red');
+							} else {
+								game_model.myLine[j].stroke('white');
+
+							}
+							game_model.myLineModel[j].addPoint(j*5-7.5,Math.sin((x+j*80)*(Math.PI/180))+2.5);
+							//console.log(game_model.myLineModel[j].getPoints());
+
+							game_model.myLine[j].attrs.points = game_model.myLineModel[j].getPoints();
+
+							game_model.myLineModel[j].movePoints();
+							curPoint = game_model.myLineModel[j].getPoint(selectPoint);
+							if(curPoint !== null) {
+								hzPoints.push(curPoint[0]);
+								hzPoints.push(curPoint[1]);
+							}
+						}
+						game_model.myHzLine.attrs.points = hzPoints;
+						// Logic
+						// Modify model -> see difference
+						x +=2;
+
+						if(moving === false) {
+
+							game_model.spriteSheet.animation('idle');
+							if(game_model.myImg != null) {
+								//var imgPoint = game_model.myLineModel[1].getPoint(selectPoint);
+								if(endGameState === false) {
+									selectPoint = 120;
 								} else {
-									game_model.spriteSheet.scaleX(scaling_factor);
+									selectPoint += 1;
+									if(selectPoint > 199) {
+										state = gameOverState;
+									}
 								}
-								//game_model.spriteSheet.rotation(rotation_angle+15);
-								game_model.spriteSheet.scaleY(scaling_factor);
-								game_model.spriteSheet.setX(imgPoint[0]-scaling_factor);
-								game_model.spriteSheet.setY(imgPoint[1]-scaling_factor*52);
-
-
-							}
-						}
-
-
-						if(keyStates[37] === true) {
-							console.log('left');
-							if(game_model.currentLine > 0) {
-								moving = true;
-								playerspeedy = -15;
-								movingtoline = game_model.currentLine--;
-								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(150);
+								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(selectPoint);
 								if(imgPoint !== null) {
-
-									var scaling_factor = (((200-120)*0.005)+0.1);	
-									var angle = game_model.myLineModel[game_model.currentLine].getPointAngle(150);
-
-									targetx = imgPoint[0]+Math.sin(angle)*3*30-scaling_factor*30;
-									targety = imgPoint[1]+Math.cos(angle)*3*30-scaling_factor*105;
-
-									movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
-									movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
-								}
-
-							}
-						}
-						if(keyStates[38] === true) {
-							console.log('up');
-						}
-						if(keyStates[39] === true) {
-							console.log('right');
-							if(game_model.currentLine <3) {
-								moving = true;
-								playerspeedy = -15;
-								movingtoline = game_model.currentLine+1;
-								game_model.currentLine++;
-
-								var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(150);
-								if(imgPoint !== null) {
-									var scaling_factor = (((200-120)*0.005)+0.1);	
-									var angle = game_model.myLineModel[game_model.currentLine].getPointAngle(150);
-									targetx = imgPoint[0]+Math.sin(angle)*3*30-scaling_factor*30;
-									targety = imgPoint[1]+Math.cos(angle)*3*30-scaling_factor*105;
+									if(bgMusicState === false) {
+										bgMusic = new Howl({
+											urls: ['web/sounds/fgj2014_running.ogg'],
+											loop: true,
+											volume: 0.5,
+										}).play();
+										bgMusicState = true;
+									}
+									var scaling_factor = (((200-selectPoint)*0.005)+0.1);	
+									var rotation_angle = -game_model.myLineModel[game_model.currentLine].getPointDiffAngle(selectPoint)*(180/Math.PI)*0.5;
+									if(game_model.currentLine > 1) {
+										game_model.spriteSheet.scaleX(-scaling_factor);
+									} else {
+										game_model.spriteSheet.scaleX(scaling_factor);
+									}
+									//game_model.spriteSheet.rotation(rotation_angle+15);
+									game_model.spriteSheet.scaleY(scaling_factor);
+									game_model.spriteSheet.setX(imgPoint[0]-scaling_factor);
+									game_model.spriteSheet.setY(imgPoint[1]-scaling_factor*52);
 
 
-									movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
-									movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 								}
 							}
-						}
-						if(keyStates[40] === true) {
-							console.log('down');
-						}
 
-					} else {
-						// Animation in progress!
-						game_model.spriteSheet.animation('jump');
-						if(targetx < game_model.spriteSheet.getX()) {
-							playerspeedx =-movespeedx;
-						}
-						if(targetx > game_model.spriteSheet.getX()) {
-							playerspeedx = movespeedx; 
-						}
-						if(targety < game_model.spriteSheet.getY()) {
-							playerspeedy = -movespeedy;
-						}
-						if(targety > game_model.spriteSheet.getY()) {
-							playerspeedy = movespeedy;
-						}
 
-						game_model.spriteSheet.setX( game_model.spriteSheet.getX()+playerspeedx);
-						game_model.spriteSheet.setY( game_model.spriteSheet.getY()+playerspeedy);
-						if( Math.abs(game_model.spriteSheet.getX() - targetx) <= 10 &&
-								Math.abs(game_model.spriteSheet.getY() - targety) <= 10) {
-									moving = false;
+							if(keyStates[37] === true) {
+								console.log('left');
+								if(game_model.currentLine > 0) {
+									moving = true;
+									playerspeedy = -15;
+									movingtoline = game_model.currentLine--;
+									var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(150);
+									if(imgPoint !== null) {
+
+										var scaling_factor = (((200-120)*0.005)+0.1);	
+										var angle = game_model.myLineModel[game_model.currentLine].getPointAngle(150);
+
+										targetx = imgPoint[0]+Math.sin(angle)*3*30-scaling_factor*30;
+										targety = imgPoint[1]+Math.cos(angle)*3*30-scaling_factor*105;
+
+										movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
+										movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
+									}
+
 								}
-
-					}
-					if(game_model.myLineModel[0].getPoint(190) !== null && obstacle[0] === undefined)
-					{
-						obstacle[0] = new ObstacleModel(game_model.sprites[5], game_model.myLineModel[0], -1,100);
-						obstacle[1] = new ObstacleModel(game_model.sprites[6], game_model.myLineModel[1], -1,100);
-						obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[2], -1,100);
-						obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[3], -1,100);
-					}
-
-					for(var j=0;j<numObstacles;j++) {
-						if(obstacle[j] !== undefined) {
-							obstacle[j].updatePosition();
-
-							if(obstacle[j].getCurrentPoint() < 40) {
-								var obsLine = Math.floor((Math.random()*4));
-								curObstacleLine[j] = obsLine;
-								obstacle[j] = new ObstacleModel(game_model.sprites[j+5], game_model.myLineModel[obsLine], -(Math.random()*2+0.5),199);
 							}
+							if(keyStates[38] === true) {
+								console.log('up');
+							}
+							if(keyStates[39] === true) {
+								console.log('right');
+								if(game_model.currentLine <3) {
+									moving = true;
+									playerspeedy = -15;
+									movingtoline = game_model.currentLine+1;
+									game_model.currentLine++;
 
-							oPos = obstacle[j].getCurrentPoint();
+									var imgPoint = game_model.myLineModel[game_model.currentLine].getPoint(150);
+									if(imgPoint !== null) {
+										var scaling_factor = (((200-120)*0.005)+0.1);	
+										var angle = game_model.myLineModel[game_model.currentLine].getPointAngle(150);
+										targetx = imgPoint[0]+Math.sin(angle)*3*30-scaling_factor*30;
+										targety = imgPoint[1]+Math.cos(angle)*3*30-scaling_factor*105;
 
-							if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine && collisionState === false) {
-								console.log("Collision in line "+curObstacleLine[j].toString());
-								if(collisionState === false) {
-									collisionState = true;
-									health = health-0.1;
-									if(health < 0) {
-										health = 0.5;
-										lives -= 1;
-										game_model.myLivesText.text(''+lives);
-										if(lives <= 0) {
-											health = 0;
-											game_model.myLivesText.text('Game Over');
-											endGameState = true;
-										}
+
+										movespeedx = Math.abs(targetx - game_model.spriteSheet.getX())/30;
+										movespeedy = Math.abs(targety - game_model.spriteSheet.getY())/30;
 									}
 								}
 							}
-							
-							if(collisionState === true) {
-								collisionTimer -= 1;
-								if(collisionTimer <= 0) {
-									collisionState = false;
-									collisionTimer = 90;
+							if(keyStates[40] === true) {
+								console.log('down');
+							}
+
+						} else {
+							// Animation in progress!
+							game_model.spriteSheet.animation('jump');
+							if(targetx < game_model.spriteSheet.getX()) {
+								playerspeedx =-movespeedx;
+							}
+							if(targetx > game_model.spriteSheet.getX()) {
+								playerspeedx = movespeedx; 
+							}
+							if(targety < game_model.spriteSheet.getY()) {
+								playerspeedy = -movespeedy;
+							}
+							if(targety > game_model.spriteSheet.getY()) {
+								playerspeedy = movespeedy;
+							}
+
+							game_model.spriteSheet.setX( game_model.spriteSheet.getX()+playerspeedx);
+							game_model.spriteSheet.setY( game_model.spriteSheet.getY()+playerspeedy);
+							if( Math.abs(game_model.spriteSheet.getX() - targetx) <= 10 &&
+									Math.abs(game_model.spriteSheet.getY() - targety) <= 10) {
+										moving = false;
+									}
+
+						}
+						if(game_model.myLineModel[0].getPoint(190) !== null && obstacle[0] === undefined)
+						{
+							obstacle[0] = new ObstacleModel(game_model.sprites[5], game_model.myLineModel[0], -1,100);
+							obstacle[1] = new ObstacleModel(game_model.sprites[6], game_model.myLineModel[1], -1,100);
+							obstacle[2] = new ObstacleModel(game_model.sprites[7], game_model.myLineModel[2], -1,100);
+							obstacle[3] = new ObstacleModel(game_model.sprites[8], game_model.myLineModel[3], -1,100);
+						}
+						for(var j=0;j<numObstacles;j++) {
+							if(obstacle[j] !== undefined) {
+								obstacle[j].updatePosition();
+
+								if(obstacle[j].getCurrentPoint() < 40) {
+									var obsLine = Math.floor((Math.random()*4));
+									curObstacleLine[j] = obsLine;
+									obstacle[j] = new ObstacleModel(game_model.sprites[j+5], game_model.myLineModel[obsLine], -(Math.random()*2+0.5),199);
 								}
-								console.log(collisionState);
+
+								oPos = obstacle[j].getCurrentPoint();
+
+								if(oPos < selectPoint+5 && oPos > selectPoint-5 && curObstacleLine[j] === game_model.currentLine && collisionState === false) {
+									console.log("Collision in line "+curObstacleLine[j].toString());
+									if(collisionState === false) {
+										collisionState = true;
+										health = health-0.1;
+										if(health < 0) {
+											health = 0.5;
+											lives -= 1;
+											game_model.myLivesText.text(''+lives);
+											if(lives <= 0) {
+												health = 0;
+												game_model.myLivesText.text('Game Over');
+												endGameState = true;
+											}
+										}
+									}
+								}
+
+								if(collisionState === true) {
+									collisionTimer -= 1;
+									if(collisionTimer <= 0) {
+										collisionState = false;
+										collisionTimer = 90;
+									}
+									console.log(collisionState);
+								}
 							}
 						}
+
+					} else if(state === gameOverState) {
+
+					} else {
+
 					}
 
-	
-					} else if(state === gameOverState) {
-					
-					} else {
-					
-					}
-				
 					// Check if player has collided with an object
 
 
@@ -386,26 +428,26 @@ define(['backbone','kinetic','howler','jquery','gamemodel','gameview','linemodel
 
 
 
-					// Stars
-					for(var i = 0; i < 100; i++) {
-						game_model.starsPosition[i*3+2] -= game_model.starsVelocity[i];
-						game_model.stars[i].setX(game_model.starsPosition[i*3]/game_model.starsPosition[i*3+2] * 100 + game_model.width/2);
-						game_model.stars[i].setY(game_model.starsPosition[i*3+1]/game_model.starsPosition[i*3+2] * 100 + game_model.height/2);
-						if(game_model.stars[i].getX() < 0 || game_model.stars[i].getX() > game_model.width ||game_model.stars[i].getY() < 0 || game_model.stars[i].getY() > game_model.height || game_model.starsPosition[i*3+2] < 1) {
-							game_model.starsPosition[i*3] = Math.random()*1000-500;
-							game_model.starsPosition[i*3+1] =  Math.random()*1000-500;
-							game_model.starsPosition[i*3+2] = Math.random()*900+100;					
-						}
-						//b = ( (255/5) * star_zv(i)) * (1000 / starz[i])	
-						var b = ( game_model.starsVelocity[i] * (1000 / game_model.starsPosition[i*3+2] ) );
-						game_model.stars[i].setScaleX(b/200);
-						game_model.stars[i].setScaleY(b/200);
-					}	
-
-					if(collisionState === true) {
-						game_model.spriteSheet.animation('hit');
-						game_model.spriteSheet.setScaleX(-game_model.spriteSheet.getScaleX());
+				// Stars
+				for(var i = 0; i < 100; i++) {
+					game_model.starsPosition[i*3+2] -= game_model.starsVelocity[i];
+					game_model.stars[i].setX(game_model.starsPosition[i*3]/game_model.starsPosition[i*3+2] * 100 + game_model.width/2);
+					game_model.stars[i].setY(game_model.starsPosition[i*3+1]/game_model.starsPosition[i*3+2] * 100 + game_model.height/2);
+					if(game_model.stars[i].getX() < 0 || game_model.stars[i].getX() > game_model.width ||game_model.stars[i].getY() < 0 || game_model.stars[i].getY() > game_model.height || game_model.starsPosition[i*3+2] < 1) {
+						game_model.starsPosition[i*3] = Math.random()*1000-500;
+						game_model.starsPosition[i*3+1] =  Math.random()*1000-500;
+						game_model.starsPosition[i*3+2] = Math.random()*900+100;					
 					}
+					//b = ( (255/5) * star_zv(i)) * (1000 / starz[i])	
+					var b = ( game_model.starsVelocity[i] * (1000 / game_model.starsPosition[i*3+2] ) );
+					game_model.stars[i].setScaleX(b/200);
+					game_model.stars[i].setScaleY(b/200);
+				}	
+
+				if(collisionState === true) {
+					game_model.spriteSheet.animation('hit');
+					game_model.spriteSheet.setScaleX(-game_model.spriteSheet.getScaleX());
+				}
 
 
 
